@@ -1,0 +1,86 @@
+import init.smdk4x12.usb.rc
+import init.bt.rc
+
+on early-init
+    export EXTERNAL_STORAGE /mnt/sdcard
+    mkdir /mnt/sdcard 0000 system system
+    # for backwards compatibility
+    symlink /mnt/sdcard /sdcard
+    symlink /efs /factory
+
+    export SECONDARY_STORAGE /mnt/extSdCard:/mnt/UsbDriveA:/mnt/UsbDriveB:/mnt/UsbDriveC:/mnt/UsbDriveD:/mnt/UsbDriveE:/mnt/UsbDriveF
+    mkdir /mnt/extSdCard 0000 system system
+    mkdir /mnt/UsbDriveA 0000 system system
+    mkdir /mnt/UsbDriveB 0000 system system
+    mkdir /mnt/UsbDriveC 0000 system system
+    mkdir /mnt/UsbDriveD 0000 system system
+    mkdir /mnt/UsbDriveE 0000 system system
+    mkdir /mnt/UsbDriveF 0000 system system
+    
+
+on post-fs-data
+     # we will remap this as /mnt/sdcard with the sdcard fuse tool
+     mkdir /data/media 0775 media_rw media_rw
+     chown media_rw media_rw /data/media
+
+     # Set indication (checked by vold) that we have finished this action
+     setprop vold.post_fs_data_done 1
+
+on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+    setprop ro.build.product smdk4x12
+    setprop ro.product.device smdk4x12
+    setprop ro.radio.noril yes
+
+# fake some battery state
+    setprop status.battery.state Slow
+    setprop status.battery.level 5
+    setprop status.battery.level_raw  50
+    setprop status.battery.level_scale 9
+
+    # Set permission for Widevine DRM temporarily
+    chmod 0777 /dev/s5p-smem
+    rm /data/app/tlcd_sock
+
+    # make param block device link for SysScope
+    symlink /dev/block/mmcblk0p4 /dev/block/param
+
+# serial keyboard port
+	chown root system /dev/ttySAC2
+	chmod 0660 /dev/ttySAC2
+
+# touchscreen
+    chown radio system /sys/class/sec/tsp/cmd
+    chown media_rw media_rw /sys/class/sec/tsp/set_jitter    
+
+# epen
+    chown radio system /sys/class/sec/sec_epen/epen_firm_update
+    chown radio system /sys/class/sec/sec_epen/epen_checksum
+    chown radio system /sys/class/sec/sec_epen/epen_checksum_result
+    chown radio system /sys/class/sec/sec_epen/epen_reset
+    
+# wakeup keys
+    chown radio system /sys/class/sec/sec_key/wakeup_keys
+    write /sys/class/sec/sec_key/wakeup_keys 116,172
+
+# serial keyboard daemon
+service sec_keyboard /system/bin/sec_keyboard /dev/ttySAC2
+	class late_start
+	disabled
+	group system
+
+on property:ro.uart_debug=0
+	start sec_keyboard
+
+# create virtual SD card at /mnt/sdcard, based on the /data/media directory
+# daemon will drop to user/group system/media_rw after initializing
+# underlying files in /data/media wil be created with user and group media_rw (1023)
+service sdcard /system/bin/sdcard /data/media 1023 1023
+    class late_start
+
+service notified_event /system/bin/notified_event
+    class main
+    user system
+    group system
+    socket notified_event stream 0660 root system
