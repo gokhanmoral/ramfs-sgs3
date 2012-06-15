@@ -38,7 +38,7 @@
 
     <settingsPane description=""
 		name="CPU Undervolting">
-      <spinner description="Sets the CPU undervolting value which will be apploed during boot time only. It will not have any effect until you restart your device. Remember: if you change this value and your device doesn't boot you will have to reset extweaks settings using CWM recovery. This value will be applied to all CPU steps before any script or app execution. If you use any script or voltage control app this setting may be overriden by those." name="CPU Undervolting" action="generic /tmp/cpu_undervolting">
+      <spinner description="Sets the CPU undervolting value which will be applied during boot time only. It will not have any effect until you restart your device. Remember: if you change this value and your device doesn't boot you will have to reset extweaks settings using CWM recovery. This value will be applied to all CPU steps before any script or app execution. If you use any script or voltage control app this setting may be overriden by those." name="CPU Undervolting" action="generic /tmp/cpu_undervolting">
              <spinnerItem name="No Undervolting" value="0"/> 
              <spinnerItem name=" -25 mV" value="-25"/> 
              <spinnerItem name=" -50 mV" value="-50"/> 
