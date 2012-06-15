@@ -18,8 +18,8 @@ then
   #mount -o remount,ro /system
 fi
 [ ! -f /data/.siyah/default.profile ] && cp /res/customconfig/default.profile /data/.siyah
-[ ! -f /data/.siyah/battery.profile ] && cp /res/customconfig/default.profile /data/.siyah/battery.profile
-[ ! -f /data/.siyah/performance.profile ] && cp /res/customconfig/default.profile /data/.siyah/performance.profile
+[ ! -f /data/.siyah/battery.profile ] && cp /res/customconfig/battery.profile /data/.siyah/battery.profile
+[ ! -f /data/.siyah/performance.profile ] && cp /res/customconfig/performance.profile /data/.siyah/performance.profile
 
 . /res/customconfig/customconfig-helper
 read_defaults
