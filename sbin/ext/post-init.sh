@@ -46,11 +46,6 @@ if [ "$logger" == "off" ];then
   echo 0 > /sys/module/xt_qtaguid/parameters/debug_mask
 fi
 
-# for ntfs automounting
-mkdir /mnt/ntfs
-mount -t tmpfs tmpfs /mnt/ntfs
-chmod 777 /mnt/ntfs
-
 /sbin/busybox sh /sbin/ext/install.sh
 
 # run this because user may have chosen not to install root at boot but he may need it later and install it using ExTweaks
