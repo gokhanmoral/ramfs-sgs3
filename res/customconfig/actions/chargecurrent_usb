@@ -4,9 +4,9 @@ if [ "a$2" == "a" ];then
   echo $chargecurrent_usb
 else
   chargecurrent_usb=$2
-  //usb
+  #usb
   kmemhelper -n samsung_battery_pdata -t int -o 32 $chargecurrent_usb > /dev/null 2>&1
-  //etc
+  #etc
   kmemhelper -n samsung_battery_pdata -t int -o 48 $chargecurrent_usb > /dev/null 2>&1
   echo $chargecurrent_usb
 fi
