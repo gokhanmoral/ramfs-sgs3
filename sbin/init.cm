@@ -1,0 +1,15 @@
+#!/sbin/busybox sh
+export _PATH="$PATH"
+export PATH=/sbin
+
+busybox cd /
+busybox date >>boot.txt
+exec >>boot.txt 2>&1
+busybox rm init
+
+rm /init
+mv /innt /init
+
+busybox date >>boot.txt
+export PATH="${_PATH}"
+exec /init

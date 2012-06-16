@@ -1,0 +1,37 @@
+#!/sbin/busybox sh
+cd /
+
+busybox mount -t proc proc /proc
+busybox mount -t sysfs sysfs /sys
+tar xvf /res/misc/dev.tar
+
+if busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
+  # low power mode
+  echo 0 > /proc/sys/kernel/rom_feature_set
+  cp lpm.rc init.rc
+  rm init.smdk4x12.rc
+  exec /sbin/init.samsung
+fi
+
+mkdir -p /dev/block
+mknod /dev/block/mmcblk0p9 b 179 9
+mount -t ext4 /dev/block/mmcblk0p9 /system
+
+AOSP=0
+MIUI=0
+
+[ -f /system/framework/framework2.jar ] || AOSP=1
+[ -f /system/framework/framework-miui.jar ] && MIUI=1
+
+
+if [ "$AOSP" == 1 ];
+then
+echo 1 > /proc/sys/kernel/rom_feature_set
+patch -p1 < /res/misc/cm9.patch
+mv /sbin/init.cm /sbin/init.samsung
+else
+echo 0 > /proc/sys/kernel/rom_feature_set
+fi;
+
+busybox umount /system
+exec /sbin/init.samsung
