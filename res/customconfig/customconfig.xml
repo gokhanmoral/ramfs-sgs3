@@ -4,7 +4,7 @@
       <checkbox description="Disabling GENTLE_FAIR_SLEEPERS may give you better UI responsiveness." name="GENTLE_FAIR_SLEEPERS" action="schedfeat GENTLE_FAIR_SLEEPERS" label="GENTLE_FAIR_SLEEPERS"/>
       <checkbox description="Using ARCH_POWER enables the use of arm topology power functions instead of generic ones." name="ARCH_POWER" action="schedfeat ARCH_POWER" label="ARCH_POWER"/>
     </settingsPane>
-    <settingsPane description="The following settings control CPU hotplug parameters. You can choose the number of cores and hotplug to be on or off. If you choose hotplug to be off then the number of cores you select will be enabled all the time. If you choose hotplug to be on the number of cores online will be determined based on the load and runqueue. These settings are only effective for governors which use stand-hotplug module. For other governors (such as pegasusq) you can use governor settings." 
+    <!-- settingsPane description="The following settings control CPU hotplug parameters. You can choose the number of cores and hotplug to be on or off. If you choose hotplug to be off then the number of cores you select will be enabled all the time. If you choose hotplug to be on the number of cores online will be determined based on the load and runqueue. These settings are only effective for governors which use stand-hotplug module. For other governors (such as pegasusq) you can use governor settings." 
 		name="CPU Hotplug Settings">
        <checkbox description="Enable or Disable Hotplugging" name="hotplug_on" action="generic /sys/class/misc/second_core/hotplug_on" label="Hotplug"/>
        <spinner description="Sets the CPU Hotplug Mode. Hotplug mode will dynamically switch the second core on and off. Using second core always-off or always-on modes will make the other hotplug parameters useless." name="Hotplug Mode" action="generic /sys/class/misc/second_core/second_core_on">
@@ -13,7 +13,7 @@
              <spinnerItem name="Dual core mode" value="2"/> 
              <spinnerItem name="Single core mode" value="1"/> 
        </spinner>
-    </settingsPane>
+    </settingsPane -->
 
     <settingsPane description="" 
 		name="CPU Idle and Power Settings">
@@ -53,14 +53,14 @@
              <spinnerItem name="pegasusq" value="pegasusq"/> 
              <spinnerItem name="hotplug" value="hotplug"/> 
        </spinner>
-       <seekBar description="Scaling maximum frequency (Samsung default: 1200)"
+       <seekBar description="Scaling maximum frequency (Samsung default: 1400)"
                 name="scaling_max_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq" unit=" Mhz" min="100000" reversed="false" step="100000" max="1600000"/>
        <seekBar description="Scaling minimum frequency (Samsung default: 200)"
                 name="scaling_min_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq" unit=" Mhz" min="100000" reversed="false" step="100000" max="1600000"/>
     </settingsPane>
   </settingsTab>
 
-  <settingsTab name="GPU">
+  <!-- settingsTab name="GPU">
     <settingsPane description="GPU Frequency Settings. Normally, our device has 2 frequency steps. SiyahKernel has three steps but the third step is not enabled as default. The defaults are 160,267 and 267. Voltage defaults are 950mV, 1000mV and 1000mV." name="GPUFreq">
       <spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
              <spinnerItem name="800MHz" value="800"/> 
@@ -157,7 +157,7 @@
 		name="GPU StayCount4" action="gpu-staycount 4" unit=" sec" min="0" reversed="false" step="1" max="5"/>
     </settingsPane>
 
-  </settingsTab>
+  </settingsTab -->
 
   <!-- settingsTab name="Screen">
     <settingsPane description="Brightness Curve settings which modify auto-brightness behavior." name="Brightness Curve">
