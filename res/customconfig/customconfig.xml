@@ -63,6 +63,7 @@
   <settingsTab name="GPU">
     <settingsPane description="GPU Frequency Settings. Normally, our device has 2 frequency steps. SiyahKernel has three steps but the third step is not enabled as default. The defaults are 160,267 and 267. Voltage defaults are 950mV, 1000mV and 1000mV." name="GPUFreq">
       <spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
+             <spinnerItem name="800MHz" value="800"/> 
              <spinnerItem name="600MHz" value="600"/> 
              <spinnerItem name="440MHz" value="440"/> 
              <spinnerItem name="400MHz" value="400"/> 
@@ -76,6 +77,7 @@
              <spinnerItem name="40MHz" value="40"/> 
       </spinner>
       <spinner description="Changes the second GPU frequency step" name="GPU Freq Step2" action="gpu-freq 2">
+             <spinnerItem name="800MHz" value="800"/> 
              <spinnerItem name="600MHz" value="600"/> 
              <spinnerItem name="440MHz" value="440"/> 
              <spinnerItem name="400MHz" value="400"/> 
@@ -89,6 +91,7 @@
              <spinnerItem name="40MHz" value="40"/> 
       </spinner>
       <spinner description="Changes the third GPU frequency step" name="GPU Freq Step3" action="gpu-freq 3">
+             <spinnerItem name="800MHz" value="800"/> 
              <spinnerItem name="600MHz" value="600"/> 
              <spinnerItem name="440MHz" value="440"/> 
              <spinnerItem name="400MHz" value="400"/> 
@@ -102,6 +105,7 @@
              <spinnerItem name="40MHz" value="40"/> 
       </spinner>
       <spinner description="Changes the fourth (last) GPU frequency step" name="GPU Freq Step4" action="gpu-freq 4">
+             <spinnerItem name="800MHz" value="800"/> 
              <spinnerItem name="600MHz" value="600"/> 
              <spinnerItem name="440MHz" value="440"/> 
              <spinnerItem name="400MHz" value="400"/> 
