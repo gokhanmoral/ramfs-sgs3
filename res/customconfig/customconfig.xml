@@ -60,9 +60,16 @@
     </settingsPane>
   </settingsTab>
 
-  <!-- settingsTab name="GPU">
-    <settingsPane description="GPU Frequency Settings. Normally, our device has 2 frequency steps. SiyahKernel has three steps but the third step is not enabled as default. The defaults are 160,267 and 267. Voltage defaults are 950mV, 1000mV and 1000mV." name="GPUFreq">
-      <spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
+  <settingsTab name="GPU">
+    <settingsPane description="GPU Frequency Settings." name="GPUFreq">
+      <spinner description="Sets the freq level that cpu locks when GPU is using the highest level. Default is 1200 in Samsung Stock Kernel. If you experience any slowdown in games or GPU-related tasks you can try  to increase this. SiyahKernel default is 500MHz." name="CPUFreq-Lock-GPU" action="generickmem cpufreq_lock_gpu 0 int">
+             <spinnerItem name="500MHz" value="500"/> 
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="1000MHz" value="1000"/> 
+             <spinnerItem name="1200MHz" value="1200"/> 
+      </spinner>
+      
+      <!-- spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
              <spinnerItem name="800MHz" value="800"/> 
              <spinnerItem name="600MHz" value="600"/> 
              <spinnerItem name="440MHz" value="440"/> 
@@ -117,10 +124,10 @@
              <spinnerItem name="100MHz" value="100"/> 
              <spinnerItem name="66MHz" value="66"/> 
              <spinnerItem name="40MHz" value="40"/> 
-      </spinner>
+      </spinner -->
     </settingsPane>
 
-    <settingsPane description="GPU Voltage Levels: The defaults are 950,1050 and 1050." name="GPU Voltage Levels">
+    <!-- settingsPane description="GPU Voltage Levels: The defaults are 950,1050 and 1050." name="GPU Voltage Levels">
       <seekBar description="GPU Voltage for the first (lowest) step" 
 		name="GPU Voltage Level1" action="gpu-voltage 1" unit="mV" min="600" reversed="false" step="25" max="1200"/>
       <seekBar description="GPU Voltage for the second step" 
@@ -155,9 +162,25 @@
 		name="GPU StayCount3" action="gpu-staycount 3" unit=" sec" min="0" reversed="false" step="1" max="5"/>
       <seekBar description="GPU fourth step (for the highest freq) StayCount" 
 		name="GPU StayCount4" action="gpu-staycount 4" unit=" sec" min="0" reversed="false" step="1" max="5"/>
-    </settingsPane>
+    </settingsPane -->
+  </settingsTab>
 
-  </settingsTab -->
+  <settingsTab name="Audio">
+    <settingsPane description="Headset Amplification Settings" name="Headset Amplification">
+      <spinner description="Global switch to enable or disable headset amplification. If this is disabled the settings below will not have any effect." name="headset-amplification" action="generickmem voodoo_enable 0 int">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner>
+      <spinner description="Dac direct" name="dac direct" action="generickmem dac_direct 0 int">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner>
+      <seekBar description="Headset Left Channel Amplification Level (0-62)" 
+		name="Left channel level" action="generickmem voodoo_hpvol 0 int" unit="" min="0" reversed="false" step="1" max="62"/>
+      <seekBar description="Headset Right Channel Amplification Level (0-62)" 
+		name="Right channel level" action="generickmem voodoo_hpvol 4 int" unit="" min="0" reversed="false" step="1" max="62"/>
+    </settingsPane>
+  </settingsTab>
 
   <!-- settingsTab name="Screen">
     <settingsPane description="Brightness Curve settings which modify auto-brightness behavior." name="Brightness Curve">
@@ -177,7 +200,6 @@
 		name="Vibration Intensity" action="generic /sys/devices/platform/tspdrv/vibrator_level" unit="" min="0" reversed="false" step="1" max="6"/>
     </settingsPane>
   </settingsTab -->
-
   <settingsTab name="Misc">
     <settingsPane description="Misc Settings" name="Misc Settings">
       <!-- button description="Back up the efs partition" name="BackupEFS" action="efs-backup" label="Backup EFS"/ -->

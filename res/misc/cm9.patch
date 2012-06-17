@@ -1,4 +1,3 @@
-Binary files init.samsung/init and init.cm9/init differ
 diff -ruN init.samsung/init.rc init.cm9/init.rc
 --- init.samsung/init.rc	2012-06-16 13:10:12.351170810 +0300
 +++ init.cm9/init.rc	2012-06-16 19:00:37.000000000 +0300
@@ -964,8 +963,8 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  	class core
 diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 --- init.samsung/init.smdk4x12.rc	2012-06-16 16:24:45.326765346 +0300
-+++ init.cm9/init.smdk4x12.rc	2012-06-16 16:05:03.000000000 +0300
-@@ -3,28 +3,349 @@
++++ init.cm9/init.smdk4x12.rc	2012-06-17 23:54:20.000000000 +0300
+@@ -3,28 +3,368 @@
  
  on early-init
      export EXTERNAL_STORAGE /mnt/sdcard
@@ -1083,10 +1082,26 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    chmod 0600 /dev/pn544
 +    chown nfc nfc /dev/pn544
 +    
-+# Vibetonz
++# Vibrator
 +    chmod 0660 /dev/tspdrv
 +    chown root shell /dev/tspdrv
-+    
++    chmod 0660 /sys/vibrator/pwm_val
++    chown system system /sys/vibrator/pwm_val
++
++# LED
++    chmod 0660 /sys/class/sec/led/led_fade
++    chown system system 
++
++# Touchkey
++    chmod 0660 /sys/class/sec/sec_touchkey/timeout
++    chown system system /sys/class/sec/sec_touchkey/timeout
++    chmod 0660 /sys/class/sec/sec_touchkey/force_disable
++    chown system system /sys/class/sec/sec_touchkey/force_disable
++
++# Camera Flash
++    chmod 0666 /sys/devices/virtual/flash/flash/flash_power
++    chown system radio /sys/devices/virtual/flash/flash/flash_power
++
 +# Permissions for LCD
 +    chown system radio /sys/class/lcd/panel/lcd_power
 +    chown system radio /sys/class/lcd/panel/lcd_type
@@ -1101,6 +1116,8 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    chown system media_rw /sys/class/mdnie/mdnie/outdoor
 +    chown system media_rw /sys/class/mdnie/mdnie/scenario
 +    chown system system /sys/class/mdnie/mdnie/negative
++    write /sys/class/mdnie/mdnie/scenario 4
++    write /sys/class/mdnie/mdnie/mode 1
 +
 +# Permissions for System Server and daemons.
 +    chown radio system /sys/android_power/state
@@ -1316,16 +1333,17 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    mkdir /data/misc/dhcp 0775 dhcp dhcp
 +    chown dhcp dhcp /data/misc/dhcp
 +
-+    write /data/.cid.info murata
-+    chown system wifi /data/.cid.info
-+    chmod 0660 /data/.cid.info
++# for TRP/TIS
++    write /data/.psm.info 1
++    chown system root /data/.psm.info
++    chmod 0660 /data/.psm.info
 +
 +    # Set indication (checked by vold) that we have finished this action
 +    setprop vold.post_fs_data_done 1
  
  on boot
      mount debugfs /sys/kernel/debug /sys/kernel/debug
-@@ -32,6 +353,7 @@
+@@ -32,6 +372,7 @@
      setprop ro.build.product smdk4x12
      setprop ro.product.device smdk4x12
      setprop ro.radio.noril yes
@@ -1333,7 +1351,7 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
  
  # fake some battery state
      setprop status.battery.state Slow
-@@ -39,6 +361,9 @@
+@@ -39,6 +380,9 @@
      setprop status.battery.level_raw  50
      setprop status.battery.level_scale 9
  
@@ -1343,15 +1361,17 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
      # Set permission for Widevine DRM temporarily
      chmod 0777 /dev/s5p-smem
      rm /data/app/tlcd_sock
-@@ -79,8 +404,74 @@
+@@ -79,8 +423,78 @@
  service sdcard /system/bin/sdcard /data/media 1023 1023
      class late_start
  
 -service notified_event /system/bin/notified_event
 +# icd
 +service icd /system/bin/icd
-+    class main
-+    user system
+     class main
+     user system
+-    group system
+-    socket notified_event stream 0660 root system
 +    group system log
 +    onrestart exec icd_check
 +
@@ -1401,6 +1421,10 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +	disabled
 +	oneshot
 +
++service macloader /system/bin/macloader
++    class main
++    oneshot
++
 +# GPS
 +service gpsd /system/bin/gpsd -c /system/etc/gps.xml
 +    class main
@@ -1409,10 +1433,8 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    group system inet sdcard_rw
 +
 +service dmb /system/bin/dmbserver
-     class main
-     user system
--    group system
--    socket notified_event stream 0660 root system
++    class main
++    user system
 +    group radio inet misc audio camera graphics net_bt net_bt_admin sdcard_rw
 +
 +# TVout
@@ -1421,6 +1443,32 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +     user system
 +     group graphics
 +
+diff -ruN init.samsung/lpm.rc init.cm9/lpm.rc
+--- init.samsung/lpm.rc	2012-06-16 13:10:12.351170810 +0300
++++ init.cm9/lpm.rc	2012-06-17 02:36:48.000000000 +0300
+@@ -55,18 +55,17 @@
+ 	service ueventd /sbin/ueventd
+     	critical
+ 
+-#service console /bin/sh
+ service console /system/bin/sh
+-	console
++    console
+ 
+ service playlpm /system/bin/playlpm
+-    	user root
++    user root
+ 
+ service immvibed /system/bin/immvibed 
+-	oneshot
++    oneshot
+ 
+ service lpmkey /system/bin/lpmkey
+-    	user root
++    user root
+ 
+ # adbd is controlled by the persist.service.adb.enable system property
+ service adbd /sbin/adbd
 diff -ruN init.samsung/ueventd.rc init.cm9/ueventd.rc
 --- init.samsung/ueventd.rc	2012-06-16 13:10:12.351170810 +0300
 +++ init.cm9/ueventd.rc	2012-06-16 12:52:49.063207049 +0300
@@ -1441,3 +1489,22 @@ diff -ruN init.samsung/ueventd.rc init.cm9/ueventd.rc
  
  # CDMA radio interface MUX
  /dev/ts0710mux*           0640   radio      radio
+diff -ruN init.samsung/ueventd.smdk4x12.rc init.cm9/ueventd.smdk4x12.rc
+--- init.samsung/ueventd.smdk4x12.rc	2012-06-16 13:10:12.351170810 +0300
++++ init.cm9/ueventd.smdk4x12.rc	2012-06-17 02:37:06.000000000 +0300
+@@ -5,11 +5,11 @@
+ /dev/s3c-mem              0666   system     graphics
+ /dev/s3c-mfc              0666   system     graphics
+ /dev/s5p-mfc              0666   system     graphics
+-/dev/video0               0666   system     m2m
++/dev/video0               0666   system     camera
+ /dev/video1               0666   system     camera
+-/dev/video2               0666   system     m2m
+-/dev/video3               0666   system     m2m
+-/dev/video4               0666   system     m2m
++/dev/video2               0666   system     camera
++/dev/video3               0666   system     camera
++/dev/video4               0666   system     camera
+ /dev/video11              0666   system     system
+ /dev/video12              0666   system     system
+ /dev/video16              0666   system     system

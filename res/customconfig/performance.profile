@@ -33,5 +33,6 @@ scaling_min_freq=200000
 GENTLE_FAIR_SLEEPERS=on
 ARCH_POWER=on
 hotplug_on=on
-second_core_on=4
+active_cpucore_count=4
 sched_mc_power_savings=0
+cpufreq_lock_gpu=500
