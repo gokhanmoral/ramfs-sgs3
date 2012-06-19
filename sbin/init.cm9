@@ -7,8 +7,9 @@ busybox date >>boot.txt
 exec >>boot.txt 2>&1
 busybox rm init
 
+rm /innt.samsung
 rm /init
-mv /innt /init
+mv /innt.cm9 /init
 
 busybox date >>boot.txt
 export PATH="${_PATH}"

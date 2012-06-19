@@ -28,10 +28,11 @@ if [ "$AOSP" == 1 ];
 then
 echo 1 > /proc/sys/kernel/rom_feature_set
 patch -p1 < /res/misc/cm9.patch
-mv /sbin/init.cm /sbin/init.samsung
+busybox umount /system
+exec /sbin/init.cm9
 else
 echo 0 > /proc/sys/kernel/rom_feature_set
-fi;
-
 busybox umount /system
 exec /sbin/init.samsung
+fi;
+
