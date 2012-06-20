@@ -963,7 +963,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  	class core
 diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 --- init.samsung/init.smdk4x12.rc	2012-06-16 16:24:45.326765346 +0300
-+++ init.cm9/init.smdk4x12.rc	2012-06-17 23:54:20.000000000 +0300
++++ init.cm9/init.smdk4x12.rc	2012-06-20 05:05:03.000000000 +0300
 @@ -3,28 +3,368 @@
  
  on early-init
@@ -990,8 +990,8 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    mkdir /efs
 +
 +# ko files for exfat
-+    insmod /system/lib/modules/exfat_core.ko
-+    insmod /system/lib/modules/exfat_fs.ko
++    insmod /lib/modules/exfat_core.ko
++    insmod /lib/modules/exfat_fs.ko
 +
 +# ko files for FM Radio
 +    insmod /system/lib/modules/Si4709_driver.ko
@@ -1090,7 +1090,7 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +
 +# LED
 +    chmod 0660 /sys/class/sec/led/led_fade
-+    chown system system 
++    chown system system /sys/class/sec/led/led_fade
 +
 +# Touchkey
 +    chmod 0660 /sys/class/sec/sec_touchkey/timeout
@@ -1445,10 +1445,38 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +
 diff -ruN init.samsung/lpm.rc init.cm9/lpm.rc
 --- init.samsung/lpm.rc	2012-06-16 13:10:12.351170810 +0300
-+++ init.cm9/lpm.rc	2012-06-17 02:36:48.000000000 +0300
-@@ -55,18 +55,17 @@
- 	service ueventd /sbin/ueventd
-     	critical
++++ init.cm9/lpm.rc	2012-06-19 19:03:09.000000000 +0300
+@@ -2,7 +2,6 @@
+     start ueventd
+ 
+ on init
+-
+     export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
+     export LD_LIBRARY_PATH /vendor/lib:/system/lib
+     export ANDROID_ROOT /system
+@@ -23,14 +22,10 @@
+     #mount /tmp /tmp tmpfs   
+ 
+ on early-fs
+-	insmod /lib/modules/vibrator.ko
+- 
+     mount ext4 /dev/block/mmcblk0p9 /system ro wait noatime
+-    exec sfsck /dev/block/mmcblk0p12 ext4
+     mount ext4 /dev/block/mmcblk0p12 /data wait nosuid nodev noatime discard,noauto_da_alloc,journal_async_commit
+ 
+ 	mkdir /data/log 0777
+-
+ 	chmod 0666 /dev/log/radio
+ 	chmod 0666 /dev/log/main
+ 	chmod 0666 /dev/log/event    
+@@ -52,21 +47,20 @@
+ 
+ service debuggerd /system/bin/debuggerd
+ 
+-	service ueventd /sbin/ueventd
+-    	critical
++service ueventd /sbin/ueventd
++    critical
  
 -#service console /bin/sh
  service console /system/bin/sh
