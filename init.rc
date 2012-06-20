@@ -768,7 +768,7 @@ on property:persist.sys.usb.config=*
 
 # SISO-ANDR_PERF :: START Changing secheduler to cfq after boot complete
 on property:dev.sfbootcomplete=1
-    write /sys/block/mmcblk0/queue/scheduler cfq
+#    write /sys/block/mmcblk0/queue/scheduler cfq
     write /sys/power/cpufreq_min_limit -1
 #SISO-ANDR_PERF :: END
 
