@@ -1,0 +1,22 @@
+#!/sbin/busybox sh
+
+if [ "a$2" != "a" ];then
+  insecure_adbd=$2
+fi
+
+mount -o remount,rw /
+
+case "${insecure_adbd}" in
+  off)
+    cp -a /sbin/adbd.secure /sbin/adbd
+    killall -9 adbd
+    ;;
+  on)
+    cp -a /sbin/adbd.insecure /sbin/adbd
+    killall -9 adbd
+    ;;
+esac;
+
+mount -o remount,ro /
+
+echo $insecure_adbd

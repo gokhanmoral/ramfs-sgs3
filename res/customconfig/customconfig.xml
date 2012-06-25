@@ -3,17 +3,12 @@
     <settingsPane description="These settings control CFS (Complete Fair Scheduler) Task Scheduler Settings" name="CFS Settings">
       <checkbox description="Disabling GENTLE_FAIR_SLEEPERS may give you better UI responsiveness." name="GENTLE_FAIR_SLEEPERS" action="schedfeat GENTLE_FAIR_SLEEPERS" label="GENTLE_FAIR_SLEEPERS"/>
       <checkbox description="Using ARCH_POWER enables the use of arm topology power functions instead of generic ones." name="ARCH_POWER" action="schedfeat ARCH_POWER" label="ARCH_POWER"/>
+      <spinner description="Changes CFS granularity and latency settings. Using anything other than stock may decrease benchmark scores but will increase UI responsiveness" name="CFS Tweaks" action="cfs-tweaks">
+             <spinnerItem name="Samsung defaults" value="0"/> 
+             <spinnerItem name="Linux kernel defaults" value="1"/> 
+             <spinnerItem name="Thunderbolt script defaults" value="2"/> 
+      </spinner>
     </settingsPane>
-    <!-- settingsPane description="The following settings control CPU hotplug parameters. You can choose the number of cores and hotplug to be on or off. If you choose hotplug to be off then the number of cores you select will be enabled all the time. If you choose hotplug to be on the number of cores online will be determined based on the load and runqueue. These settings are only effective for governors which use stand-hotplug module. For other governors (such as pegasusq) you can use governor settings." 
-		name="CPU Hotplug Settings">
-       <checkbox description="Enable or Disable Hotplugging" name="hotplug_on" action="generic /sys/class/misc/second_core/hotplug_on" label="Hotplug"/>
-       <spinner description="Sets the CPU Hotplug Mode. Hotplug mode will dynamically switch the second core on and off. Using second core always-off or always-on modes will make the other hotplug parameters useless." name="Hotplug Mode" action="generic /sys/class/misc/second_core/second_core_on">
-             <spinnerItem name="Quad core mode (default)" value="4"/> 
-             <spinnerItem name="Triple core mode" value="3"/> 
-             <spinnerItem name="Dual core mode" value="2"/> 
-             <spinnerItem name="Single core mode" value="1"/> 
-       </spinner>
-    </settingsPane -->
 
     <settingsPane description="" 
 		name="CPU Idle and Power Settings">
@@ -32,6 +27,12 @@
              <spinnerItem name="800MHz" value="10"/> 
              <spinnerItem name="500MHz" value="13"/> 
       </spinner>
+       <spinner description="Sets the number of CPUs to be used in hotplugging (only for PegasusQ)" name="Max CPU Lock" action="generic /sys/devices/system/cpu/cpufreq/pegasusq/max_cpu_lock">
+             <spinnerItem name="Quad core mode (unlocked,default)" value="0"/> 
+             <spinnerItem name="Triple core mode" value="3"/> 
+             <spinnerItem name="Dual core mode" value="2"/> 
+             <spinnerItem name="Single core mode" value="1"/> 
+       </spinner>
       <seekBar description="Sets the sched_mc value which changes the cpu scheduler behaviour for multi-cpu systems. 0 is Samsung kernel's default value which turns sched_mc off. Setting it to 1 means that the first core will be tried to be loaded more and setting it to 2 will bias task wake-ups to semi-idle cpu package for power savings. (default: 0)"
             name="sched_mc" action="generic /sys/devices/system/cpu/sched_mc_power_savings" unit="" min="0" reversed="false" step="1" max="2"/>
     </settingsPane>
@@ -61,73 +62,7 @@
   </settingsTab>
 
   <settingsTab name="GPU">
-    <settingsPane description="GPU Frequency Settings." name="GPUFreq">
-      <spinner description="Sets the freq level that cpu locks when GPU is using the highest level. Default is 1200 in Samsung Stock Kernel. If you experience any slowdown in games or GPU-related tasks you can try  to increase this. SiyahKernel default is 500MHz." name="CPUFreq-Lock-GPU" action="generickmem cpufreq_lock_gpu 0 int">
-             <spinnerItem name="500MHz" value="500"/> 
-             <spinnerItem name="800MHz" value="800"/> 
-             <spinnerItem name="1000MHz" value="1000"/> 
-             <spinnerItem name="1200MHz" value="1200"/> 
-      </spinner>
-      
-      <!-- spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
-             <spinnerItem name="800MHz" value="800"/> 
-             <spinnerItem name="600MHz" value="600"/> 
-             <spinnerItem name="440MHz" value="440"/> 
-             <spinnerItem name="400MHz" value="400"/> 
-             <spinnerItem name="350MHz" value="350"/> 
-             <spinnerItem name="266MHz" value="266"/> 
-             <spinnerItem name="200MHz" value="200"/> 
-             <spinnerItem name="160MHz" value="160"/> 
-             <spinnerItem name="133MHz" value="133"/> 
-             <spinnerItem name="100MHz" value="100"/> 
-             <spinnerItem name="66MHz" value="66"/> 
-             <spinnerItem name="40MHz" value="40"/> 
-      </spinner>
-      <spinner description="Changes the second GPU frequency step" name="GPU Freq Step2" action="gpu-freq 2">
-             <spinnerItem name="800MHz" value="800"/> 
-             <spinnerItem name="600MHz" value="600"/> 
-             <spinnerItem name="440MHz" value="440"/> 
-             <spinnerItem name="400MHz" value="400"/> 
-             <spinnerItem name="350MHz" value="350"/> 
-             <spinnerItem name="266MHz" value="266"/> 
-             <spinnerItem name="200MHz" value="200"/> 
-             <spinnerItem name="160MHz" value="160"/> 
-             <spinnerItem name="133MHz" value="133"/> 
-             <spinnerItem name="100MHz" value="100"/> 
-             <spinnerItem name="66MHz" value="66"/> 
-             <spinnerItem name="40MHz" value="40"/> 
-      </spinner>
-      <spinner description="Changes the third GPU frequency step" name="GPU Freq Step3" action="gpu-freq 3">
-             <spinnerItem name="800MHz" value="800"/> 
-             <spinnerItem name="600MHz" value="600"/> 
-             <spinnerItem name="440MHz" value="440"/> 
-             <spinnerItem name="400MHz" value="400"/> 
-             <spinnerItem name="350MHz" value="350"/> 
-             <spinnerItem name="266MHz" value="266"/> 
-             <spinnerItem name="200MHz" value="200"/> 
-             <spinnerItem name="160MHz" value="160"/> 
-             <spinnerItem name="133MHz" value="133"/> 
-             <spinnerItem name="100MHz" value="100"/> 
-             <spinnerItem name="66MHz" value="66"/> 
-             <spinnerItem name="40MHz" value="40"/> 
-      </spinner>
-      <spinner description="Changes the fourth (last) GPU frequency step" name="GPU Freq Step4" action="gpu-freq 4">
-             <spinnerItem name="800MHz" value="800"/> 
-             <spinnerItem name="600MHz" value="600"/> 
-             <spinnerItem name="440MHz" value="440"/> 
-             <spinnerItem name="400MHz" value="400"/> 
-             <spinnerItem name="350MHz" value="350"/> 
-             <spinnerItem name="266MHz" value="266"/> 
-             <spinnerItem name="200MHz" value="200"/> 
-             <spinnerItem name="160MHz" value="160"/> 
-             <spinnerItem name="133MHz" value="133"/> 
-             <spinnerItem name="100MHz" value="100"/> 
-             <spinnerItem name="66MHz" value="66"/> 
-             <spinnerItem name="40MHz" value="40"/> 
-      </spinner -->
-    </settingsPane>
-
-    <!-- settingsPane description="GPU Voltage Levels: The defaults are 950,1050 and 1050." name="GPU Voltage Levels">
+    <settingsPane description="GPU Voltage Levels: The defaults are 875, 900, 950 and 1025." name="GPU Voltage Levels">
       <seekBar description="GPU Voltage for the first (lowest) step" 
 		name="GPU Voltage Level1" action="gpu-voltage 1" unit="mV" min="600" reversed="false" step="25" max="1200"/>
       <seekBar description="GPU Voltage for the second step" 
@@ -138,7 +73,7 @@
 		name="GPU Voltage Level4" action="gpu-voltage 4" unit="mV" min="600" reversed="false" step="25" max="1200"/>
     </settingsPane>
 
-    <settingsPane description="GPU load thresholds to change between frequency steps. The third step is disabled as default by having the second to third threshold 100." name="GPU Thresholds">
+    <settingsPane description="GPU load thresholds to change between frequency steps. Defaults: 70, 62, 90, 85, 90, 90." name="GPU Thresholds">
       <seekBar description="GPU threshold to jump up from first to second step" 
 		name="GPU Threshold 1-UP" action="gpu-thresh 1UP" unit="%" min="0" reversed="false" step="5" max="100"/>
       <seekBar description="GPU threshold to jump down from second to first step" 
@@ -153,7 +88,7 @@
 		name="GPU Threshold 4-DOWN" action="gpu-thresh 4DOWN" unit="%" min="0" reversed="false" step="5" max="100"/>
     </settingsPane>
 
-    <settingsPane description="The number of cycles that the GPU stays at the specific level. The defaults are 1,1 and 1." name="GPU StayCount">
+    <settingsPane description="The number of cycles that the GPU stays at the specific level. The defaults are all 0." name="GPU StayCount">
       <seekBar description="GPU first step (for the lowest freq) StayCount" 
 		name="GPU StayCount1" action="gpu-staycount 1" unit=" sec" min="0" reversed="false" step="1" max="5"/>
       <seekBar description="GPU second step StayCount" 
@@ -162,23 +97,53 @@
 		name="GPU StayCount3" action="gpu-staycount 3" unit=" sec" min="0" reversed="false" step="1" max="5"/>
       <seekBar description="GPU fourth step (for the highest freq) StayCount" 
 		name="GPU StayCount4" action="gpu-staycount 4" unit=" sec" min="0" reversed="false" step="1" max="5"/>
-    </settingsPane -->
+    </settingsPane>
   </settingsTab>
 
   <settingsTab name="Audio">
-    <settingsPane description="Headset Amplification Settings" name="Headset Amplification">
-      <spinner description="Global switch to enable or disable headset amplification. If this is disabled the settings below will not have any effect." name="headset-amplification" action="generickmem voodoo_enable 0 int">
+    <settingsPane description="Headphone Amplification Settings" name="Headphone Amplification">
+      <seekBar description="Headphone Amplifier Level (0-62)" 
+		name="Headphone Amplifier" action="generic /sys/class/misc/voodoo_sound/headphone_amplifier_level" unit="" min="0" reversed="false" step="1" max="62"/>
+    </settingsPane>
+    <settingsPane description="Stereo Expansion Settings" name="Stereo Expansion">
+      <spinner description="Stereo expansion effect" name="Stereo expansion" action="generic /sys/class/misc/voodoo_sound/stereo_expansion">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <spinner description="Dac direct" name="dac direct" action="generickmem dac_direct 0 int">
+      <seekBar description="Stereo Expansion Gain Level (0-32)" 
+		name="Stereo Expansion Gain" action="generic /sys/class/misc/voodoo_sound/stereo_expansion_gain" unit="" min="0" reversed="false" step="1" max="32"/>
+
+    </settingsPane>
+    <settingsPane description="Bass-boost Settings" name="Bass-boost">
+      <spinner description="Bass-boost effect. If disabled, gain and dynamic range settings will not be effective." name="Bass-boost Effect" action="bass-boost bass_boost_effect">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Sub-bass" value="1"/> 
+             <spinnerItem name="Standard" value="2"/> 
+             <spinnerItem name="Medium" value="3"/> 
+             <spinnerItem name="Small-speakers" value="4"/> 
+      </spinner>
+      <seekBar description="Bass-boost Gain Level" 
+		name="Bass-boost Gain" action="bass-boost bass_boost_gain" unit="" min="0" reversed="false" step="1" max="12"/>
+      <seekBar description="Dynamic Range (100 recommended)" 
+		name="Dynamic Range" action="bass-boost dynamic_range" unit=" " min="0" reversed="false" step="20" max="100"/>
+    </settingsPane>
+    <settingsPane description="Optimization, conversion quality, signal processing and effect settings" name="Other Settings">
+      <spinner description="Use tuned WM8994 audio clock source" name="Anti-jitter" action="generic /sys/class/misc/voodoo_sound/fll_tuning">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <seekBar description="Headset Left Channel Amplification Level (0-62)" 
-		name="Left channel level" action="generickmem voodoo_hpvol 0 int" unit="" min="0" reversed="false" step="1" max="62"/>
-      <seekBar description="Headset Right Channel Amplification Level (0-62)" 
-		name="Right channel level" action="generickmem voodoo_hpvol 4 int" unit="" min="0" reversed="false" step="1" max="62"/>
+      <spinner description="DAC 128x oversampling for cleaner sound when playing music" name="Hi-fi play" action="generic /sys/class/misc/voodoo_sound/dac_osr128">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner>
+      <spinner description="Bypass analog channel mixer for Best SNR, lowest distortion" name="dac direct" action="generic /sys/class/misc/voodoo_sound/dac_direct">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner>
+      <spinner description="Force mono on stereo outputs" name="Mono downmix" action="generic /sys/class/misc/voodoo_sound/mono_downmix">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner>
     </settingsPane>
   </settingsTab>
 
@@ -204,6 +169,7 @@
     <settingsPane description="Misc Settings" name="Misc Settings">
       <!-- button description="Back up the efs partition" name="BackupEFS" action="efs-backup" label="Backup EFS"/ -->
       <checkbox description="Enable or Disable Android Logger (needs restart)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
+      <checkbox description="Enable or Disable insecure adbd" name="Insecure adbd" action="insecure-adbd" label="Insecure adbd"/>
       <spinner description="This will set the default I/O scheduler. Default I/O scheduler will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
              <spinnerItem name="sio" value="sio"/> 
              <spinnerItem name="noop" value="noop"/> 

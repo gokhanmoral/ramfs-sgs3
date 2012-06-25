@@ -52,7 +52,7 @@ fi
 /sbin/busybox sh /sbin/ext/su-helper.sh
 
 ##### Early-init phase tweaks #####
-#/sbin/busybox sh /sbin/ext/tweaks.sh
+/sbin/busybox sh /sbin/ext/tweaks.sh
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 

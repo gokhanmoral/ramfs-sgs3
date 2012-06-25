@@ -1,5 +1,15 @@
+diff -ruN init.samsung/default.prop init.cm9/default.prop
+--- init.samsung/default.prop	2012-06-26 22:12:47.395342657 +0300
++++ init.cm9/default.prop	2012-06-16 12:52:49.059207049 +0300
+@@ -3,5 +3,5 @@
+ #
+ ro.secure=1
+ ro.allow.mock.location=0
+-ro.debuggable=0
++ro.debuggable=1
+ persist.sys.usb.config=mtp,adb
 diff -ruN init.samsung/init.rc init.cm9/init.rc
---- init.samsung/init.rc	2012-06-16 13:10:12.351170810 +0300
+--- init.samsung/init.rc	2012-06-30 11:02:43.645704195 +0300
 +++ init.cm9/init.rc	2012-06-16 19:00:37.000000000 +0300
 @@ -8,9 +8,6 @@
      mkdir /mnt 0775 root system
@@ -42,7 +52,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
      # Directory for putting things only root should see.
      mkdir /mnt/secure 0700 root root
-@@ -67,10 +61,6 @@
+@@ -67,20 +61,14 @@
      mkdir /mnt/obb 0700 root system
      mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
  
@@ -53,7 +63,10 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      write /proc/sys/kernel/panic_on_oops 1
      write /proc/sys/kernel/hung_task_timeout_secs 0
      write /proc/cpu/alignment 4
-@@ -79,8 +69,6 @@
+-#    write /proc/sys/kernel/sched_latency_ns 10000000
+-#    write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
++    write /proc/sys/kernel/sched_latency_ns 10000000
++    write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
      write /proc/sys/kernel/sched_compat_yield 1
      write /proc/sys/kernel/sched_child_runs_first 0
      write /proc/sys/kernel/randomize_va_space 2
@@ -654,7 +667,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
 -# SISO-ANDR_PERF :: START Changing secheduler to cfq after boot complete
 -on property:dev.sfbootcomplete=1
--    write /sys/block/mmcblk0/queue/scheduler cfq
+-#    write /sys/block/mmcblk0/queue/scheduler cfq
 -    write /sys/power/cpufreq_min_limit -1
 -#SISO-ANDR_PERF :: END
 -
@@ -963,7 +976,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  	class core
 diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 --- init.samsung/init.smdk4x12.rc	2012-06-16 16:24:45.326765346 +0300
-+++ init.cm9/init.smdk4x12.rc	2012-06-20 05:05:03.000000000 +0300
++++ init.cm9/init.smdk4x12.rc	2012-06-28 23:06:50.000000000 +0300
 @@ -3,28 +3,368 @@
  
  on early-init
@@ -1116,8 +1129,8 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +    chown system media_rw /sys/class/mdnie/mdnie/outdoor
 +    chown system media_rw /sys/class/mdnie/mdnie/scenario
 +    chown system system /sys/class/mdnie/mdnie/negative
-+    write /sys/class/mdnie/mdnie/scenario 4
-+    write /sys/class/mdnie/mdnie/mode 1
++    write /sys/class/mdnie/mdnie/scenario 0
++    write /sys/class/mdnie/mdnie/mode 0
 +
 +# Permissions for System Server and daemons.
 +    chown radio system /sys/android_power/state
@@ -1518,10 +1531,13 @@ diff -ruN init.samsung/ueventd.rc init.cm9/ueventd.rc
  # CDMA radio interface MUX
  /dev/ts0710mux*           0640   radio      radio
 diff -ruN init.samsung/ueventd.smdk4x12.rc init.cm9/ueventd.smdk4x12.rc
---- init.samsung/ueventd.smdk4x12.rc	2012-06-16 13:10:12.351170810 +0300
+--- init.samsung/ueventd.smdk4x12.rc	2012-06-20 09:57:38.000000000 +0300
 +++ init.cm9/ueventd.smdk4x12.rc	2012-06-17 02:37:06.000000000 +0300
-@@ -5,11 +5,11 @@
- /dev/s3c-mem              0666   system     graphics
+@@ -2,13 +2,14 @@
+ /dev/ump                  0666   system     graphics
+ /dev/exynos-mem           0666   system     graphics
+ /dev/ion                  0666   system     system
++/dev/s3c-mem              0666   system     graphics
  /dev/s3c-mfc              0666   system     graphics
  /dev/s5p-mfc              0666   system     graphics
 -/dev/video0               0666   system     m2m
@@ -1536,3 +1552,10 @@ diff -ruN init.samsung/ueventd.smdk4x12.rc init.cm9/ueventd.smdk4x12.rc
  /dev/video11              0666   system     system
  /dev/video12              0666   system     system
  /dev/video16              0666   system     system
+@@ -33,3 +34,6 @@
+ /dev/ttySAC*	          0660	 root	 system
+ 
+ /dev/input/*              0666   root       input
++
++# for wifi
++/dev/rfkill               0666   system     system
