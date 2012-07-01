@@ -124,8 +124,6 @@
       </spinner>
       <seekBar description="Bass-boost Gain Level" 
 		name="Bass-boost Gain" action="bass-boost bass_boost_gain" unit="" min="0" reversed="false" step="1" max="12"/>
-      <seekBar description="Dynamic Range (100 recommended)" 
-		name="Dynamic Range" action="bass-boost dynamic_range" unit=" " min="0" reversed="false" step="20" max="100"/>
     </settingsPane>
     <settingsPane description="Optimization, conversion quality, signal processing and effect settings" name="Other Settings">
       <spinner description="Use tuned WM8994 audio clock source" name="Anti-jitter" action="generic /sys/class/misc/voodoo_sound/fll_tuning">
