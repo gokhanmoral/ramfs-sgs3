@@ -105,40 +105,44 @@
       <seekBar description="Headphone Amplifier Level (0-62)" 
 		name="Headphone Amplifier" action="generic /sys/class/misc/voodoo_sound/headphone_amplifier_level" unit="" min="0" reversed="false" step="1" max="62"/>
     </settingsPane>
-    <settingsPane description="Stereo Expansion Settings" name="Stereo Expansion">
-      <spinner description="Stereo expansion effect" name="Stereo expansion" action="generic /sys/class/misc/voodoo_sound/stereo_expansion">
+    <settingsPane description="3D Effect Settings" name="3D Effect">
+      <spinner description="3D effect" name="3D Effect" action="generic /sys/class/misc/voodoo_sound/stereo_expansion">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <seekBar description="Stereo Expansion Gain Level (0-32)" 
-		name="Stereo Expansion Gain" action="generic /sys/class/misc/voodoo_sound/stereo_expansion_gain" unit="" min="0" reversed="false" step="1" max="32"/>
+      <seekBar description="3D Effect Gain Level (0-32)" 
+		name="3D Effect Gain" action="generic /sys/class/misc/voodoo_sound/stereo_expansion_gain" unit="" min="0" reversed="false" step="1" max="32"/>
 
     </settingsPane>
-    <settingsPane description="Bass-boost Settings" name="Bass-boost">
-      <spinner description="Bass-boost effect. If disabled, gain and dynamic range settings will not be effective." name="Bass-boost Effect" action="bass-boost bass_boost_effect">
+    <settingsPane description="Gimme-drums Settings" name="Bass-boost">
+      <spinner description="Gimme-drums effect. If disabled, the other settings in this group will not be effective." name="Gimme-drums Effect" action="bass-boost bass_boost_effect">
              <spinnerItem name="Disabled" value="0"/> 
-             <spinnerItem name="Sub-bass" value="1"/> 
-             <spinnerItem name="Standard" value="2"/> 
-             <spinnerItem name="Medium" value="3"/> 
-             <spinnerItem name="Small-speakers" value="4"/> 
+             <spinnerItem name="Level1" value="1"/> 
+             <spinnerItem name="Level2" value="2"/> 
+             <spinnerItem name="Level3" value="3"/> 
+             <spinnerItem name="Level4" value="4"/> 
       </spinner>
-      <seekBar description="Bass-boost Gain Level" 
-		name="Bass-boost Gain" action="bass-boost bass_boost_gain" unit="" min="0" reversed="false" step="1" max="12"/>
+      <seekBar description="Gimme-drums Gain Level" 
+		name="Gimme-drums Gain" action="bass-boost bass_boost_gain" unit="" min="0" reversed="false" step="1" max="12"/>
     </settingsPane>
     <settingsPane description="Optimization, conversion quality, signal processing and effect settings" name="Other Settings">
-      <spinner description="Use tuned WM8994 audio clock source" name="Anti-jitter" action="generic /sys/class/misc/voodoo_sound/fll_tuning">
+      <!-- spinner description="Tuned WM1811 FLL to generate clock source" name="FLL Tuning" action="generic /sys/class/misc/voodoo_sound/fll_tuning">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Enabled" value="1"/> 
+      </spinner -->
+      <spinner description="For 48kHz sample rate, the DAC oversample rate is 128fs when this option is selected, which makes the music sound better." name="DAC OverSampling" action="generic /sys/class/misc/voodoo_sound/dac_osr128">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <spinner description="DAC 128x oversampling for cleaner sound when playing music" name="Hi-fi play" action="generic /sys/class/misc/voodoo_sound/dac_osr128">
+      <spinner description="For 48kHz sample rate, the ADC oversample rate is 128fs when this setting is selected (otherwise 64fs mode) which makes the recording quality better." name="DAC OverSampling" action="generic /sys/class/misc/voodoo_sound/adc_osr128">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <spinner description="Bypass analog channel mixer for Best SNR, lowest distortion" name="dac direct" action="generic /sys/class/misc/voodoo_sound/dac_direct">
+      <!-- spinner description="Bypass analog channel mixer. Use with caution as it will cause problems with FM and recording until the implementation is complete" name="Bypass Analog Mixer" action="generic /sys/class/misc/voodoo_sound/dac_direct">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
-      </spinner>
-      <spinner description="Force mono on stereo outputs" name="Mono downmix" action="generic /sys/class/misc/voodoo_sound/mono_downmix">
+      </spinner -->
+      <spinner description="This forces the output to be mono even if the source is stereo" name="Force Mono" action="generic /sys/class/misc/voodoo_sound/mono_downmix">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>

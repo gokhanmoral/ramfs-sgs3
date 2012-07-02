@@ -12,10 +12,6 @@ if [ "a${ccxmlsum}" != "a`cat /data/.siyah/.ccxmlsum`" ];
 then
   rm -f /data/.siyah/*.profile
   echo ${ccxmlsum} > /data/.siyah/.ccxmlsum
-  #force install old superuser on kernel update
-  #mount -o remount,rw /system
-  #rm -f /system/xbin/su
-  #mount -o remount,ro /system
 fi
 [ ! -f /data/.siyah/default.profile ] && cp /res/customconfig/default.profile /data/.siyah
 [ ! -f /data/.siyah/battery.profile ] && cp /res/customconfig/battery.profile /data/.siyah/battery.profile
@@ -70,6 +66,3 @@ sleep 30
 (
 /sbin/busybox sh /sbin/ext/run-init-scripts.sh
 )&
-
-#read sync < /data/sync_fifo
-#rm /data/sync_fifo
