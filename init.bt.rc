@@ -27,7 +27,13 @@ service hciattach_le /system/bin/brcm_patchram_plus --enable_hci --no2bytes --to
     disabled
     oneshot
 
-service LE_dut_cmd /system/bin/LE_dut
+## LE 2 wired Test
+service LE_dut_cmd_on /system/bin/LE_dut --le_enable
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
+
+ service LE_dut_cmd_off /system/bin/LE_dut --le_disable
     group bluetooth net_bt_admin
     disabled
     oneshot

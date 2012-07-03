@@ -1,0 +1,104 @@
+diff -ruN init.samsung/init.bt.rc init.miui/init.bt.rc
+--- init.samsung/init.bt.rc	2012-07-11 23:21:24.000000000 +0300
++++ init.miui/init.bt.rc	2012-07-07 02:56:09.300157472 +0300
+@@ -27,13 +27,7 @@
+     disabled
+     oneshot
+ 
+-## LE 2 wired Test
+-service LE_dut_cmd_on /system/bin/LE_dut --le_enable
+-    group bluetooth net_bt_admin
+-    disabled
+-    oneshot
+-
+- service LE_dut_cmd_off /system/bin/LE_dut --le_disable
++service LE_dut_cmd /system/bin/LE_dut
+     group bluetooth net_bt_admin
+     disabled
+     oneshot
+diff -ruN init.samsung/init.rc init.miui/init.rc
+--- init.samsung/init.rc	2012-07-11 23:22:25.000000000 +0300
++++ init.miui/init.rc	2012-07-07 02:56:09.300157472 +0300
+@@ -114,6 +114,7 @@
+ 
+ # WFD CES Demo
+ chmod 0666 /dev/graphics/fb5
++echo 5242880 /proc/sys/net/core/wrem_max
+ 
+ 
+ on fs
+@@ -368,8 +369,6 @@
+     chown system system /data/app/mcRegistry/ffffffff000000000000000000000004.tlbin
+     copy /system/app/mcRegistry/ffffffff000000000000000000000005.tlbin /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+     chown system system /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+-    copy /system/app/mcRegistry/02010000080300030000000000000000.tlbin /data/app/mcRegistry/02010000080300030000000000000000.tlbin
+-    chown system system /data/app/mcRegistry/02010000080300030000000000000000.tlbin
+ 
+ # icd
+     exec icd_check
+@@ -493,7 +492,6 @@
+     chown system radio /sys/class/power_supply/battery/test_mode
+     chown system radio /sys/class/power_supply/battery/wc_status
+     chown system radio /sys/class/power_supply/battery/wpc_pin_state
+-    chown system radio /sys/class/power_supply/battery/update
+ 
+ # Thermistor node
+     chown radio system /sys/devices/platform/sec-thermistor/temp_adc
+@@ -682,14 +680,8 @@
+     setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
+     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
+ 
+-# for sales_code read permission
+-    chown radio system /efs/imei
+-    chown radio system /efs/imei/mps_code.dat
+-    chmod 775 /efs/imei/mps_code.dat
+-    
+-    
+ # wifi display
+-    write /proc/sys/net/core/wmem_max   2097152
++    write /proc/sys/net/core/wmem_max   262144
+ 
+ # klaatu tdmb ownership
+     chown system system /dev/tdmb
+@@ -906,11 +898,6 @@
+     class main
+     user root
+     group system radio inet net_raw
+-
+-service BCS-daemon /system/bin/connfwexe
+-    class main
+-    user root
+-    group system radio inet net_raw
+     
+ service mobex-daemon /system/bin/npsmobex
+     class main
+@@ -1091,7 +1078,7 @@
+ service TvoutService_C /system/bin/bintvoutservice
+      class main
+      user system
+-     group system
++     group graphics
+ 
+ on property:ro.tvout.enable=false
+ 	stop TvoutService_C 
+diff -ruN init.samsung/lpm.rc init.miui/lpm.rc
+--- init.samsung/lpm.rc	2012-07-11 23:22:44.000000000 +0300
++++ init.miui/lpm.rc	2012-07-07 02:53:42.052162577 +0300
+@@ -26,6 +26,8 @@
+ 	insmod /lib/modules/vibrator.ko
+  
+     mount ext4 /dev/block/mmcblk0p9 /system ro wait noatime
++    exec sfsck /dev/block/mmcblk0p12 ext4
++    mount ext4 /dev/block/mmcblk0p12 /data wait nosuid nodev noatime discard,noauto_da_alloc,journal_async_commit
+ 
+ 	mkdir /data/log 0777
+ 
+diff -ruN init.samsung/ueventd.smdk4x12.rc init.miui/ueventd.smdk4x12.rc
+--- init.samsung/ueventd.smdk4x12.rc	2012-07-11 23:22:51.000000000 +0300
++++ init.miui/ueventd.smdk4x12.rc	2012-07-07 02:53:42.052162577 +0300
+@@ -32,4 +32,4 @@
+ 
+ /dev/ttySAC*	          0660	 root	 system
+ 
+-/dev/input/*              0664   root       input
++/dev/input/*              0666   root       input

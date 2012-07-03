@@ -21,6 +21,12 @@ payload_extracted=0
 
 cd /
 
+if [ "$insecure_adbd" == "off" ];
+then
+  cp -a /sbin/adbd.secure /sbin/adbd
+  killall -9 adbd
+fi
+
 if [ "$install_root" == "on" ];
 then
   if [ -s /system/xbin/su ];
@@ -51,24 +57,6 @@ then
     chmod 644 /system/app/Superuser.apk
   fi
 fi;
-
-#echo "Checking if cwmanager is installed"
-#if [ ! -f /system/.siyah/cwmmanager3-installed ];
-#then
-#  if [ "$payload_extracted" == "0" ];then
-#    extract_payload
-#  fi
-#  rm /system/app/CWMManager.apk
-#  rm /data/dalvik-cache/*CWMManager.apk*
-#  rm /data/app/eu.chainfire.cfroot.cwmmanager*.apk
-#
-#  xzcat /res/misc/payload/CWMManager.apk.xz > /system/app/CWMManager.apk
-#  chown 0.0 /system/app/CWMManager.apk
-#  chmod 644 /system/app/CWMManager.apk
-#  mkdir /system/.siyah
-#  chmod 755 /system/.siyah
-#  echo 1 > /system/.siyah/cwmmanager3-installed
-#fi
 
 echo "ntfs-3g..."
 if [ ! -s /system/xbin/ntfs-3g ];

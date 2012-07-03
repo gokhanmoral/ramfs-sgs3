@@ -6,10 +6,8 @@ then
   /sbin/busybox tar zcvf /data/.siyah/efsbackup.tar.gz /efs
   /sbin/busybox cat /dev/block/mmcblk0p3 > /data/.siyah/efsdev-mmcblk0p3.img
   /sbin/busybox gzip /data/.siyah/efsdev-mmcblk0p3.img
-  #make sure that sdcard is mounted, media scanned..etc
-  (
-    sleep 500
-    /sbin/busybox cp /data/.siyah/efs* /sdcard
-  ) &
+  /sbin/busybox cp /data/.siyah/efs* /data/media
+  chmod 777 /data/media/efsdev-mmcblk0p3.img
+  chmod 777 /data/media/efsbackup.tar.gz
 fi
 

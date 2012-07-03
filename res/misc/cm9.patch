@@ -1,15 +1,32 @@
 diff -ruN init.samsung/default.prop init.cm9/default.prop
---- init.samsung/default.prop	2012-06-26 22:12:47.395342657 +0300
+--- init.samsung/default.prop	2012-07-11 23:24:11.927531518 +0300
 +++ init.cm9/default.prop	2012-06-16 12:52:49.059207049 +0300
-@@ -3,5 +3,5 @@
- #
+@@ -4,4 +4,4 @@
  ro.secure=1
  ro.allow.mock.location=0
--ro.debuggable=0
-+ro.debuggable=1
- persist.sys.usb.config=mtp,adb
+ ro.debuggable=1
+-persist.sys.usb.config=mtp
++persist.sys.usb.config=mtp,adb
+diff -ruN init.samsung/init.bt.rc init.cm9/init.bt.rc
+--- init.samsung/init.bt.rc	2012-07-11 23:21:24.000000000 +0300
++++ init.cm9/init.bt.rc	2012-06-16 12:52:49.059207049 +0300
+@@ -27,13 +27,7 @@
+     disabled
+     oneshot
+ 
+-## LE 2 wired Test
+-service LE_dut_cmd_on /system/bin/LE_dut --le_enable
+-    group bluetooth net_bt_admin
+-    disabled
+-    oneshot
+-
+- service LE_dut_cmd_off /system/bin/LE_dut --le_disable
++service LE_dut_cmd /system/bin/LE_dut
+     group bluetooth net_bt_admin
+     disabled
+     oneshot
 diff -ruN init.samsung/init.rc init.cm9/init.rc
---- init.samsung/init.rc	2012-06-30 11:02:43.645704195 +0300
+--- init.samsung/init.rc	2012-07-11 23:22:25.000000000 +0300
 +++ init.cm9/init.rc	2012-06-16 19:00:37.000000000 +0300
 @@ -8,9 +8,6 @@
      mkdir /mnt 0775 root system
@@ -75,7 +92,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
  # Create cgroup mount points for process groups
      mkdir /dev/cpuctl
-@@ -105,34 +93,13 @@
+@@ -105,33 +93,13 @@
  # This is needed by any process that uses socket tagging.
      chmod 0644 /dev/xt_qtaguid
  
@@ -88,7 +105,6 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 -
 -# WFD CES Demo
 -chmod 0666 /dev/graphics/fb5
--echo 5242880 /proc/sys/net/core/wrem_max
 -
 -
  on fs
@@ -115,7 +131,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
  on post-fs
      # once everything is setup, no need to modify /
-@@ -140,7 +107,7 @@
+@@ -139,7 +107,7 @@
  
      # We chown/chmod /cache again so because mount is run as root + defaults
      chown system cache /cache
@@ -124,7 +140,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
      # This may have been created by the recovery system with odd permissions
      chown system cache /cache/recovery
-@@ -156,18 +123,9 @@
+@@ -155,18 +123,9 @@
      chown root system /proc/sysrq-trigger
      chmod 0220 /proc/sysrq-trigger
  
@@ -144,7 +160,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  on post-fs-data
      # We chown/chmod /data again so because mount is run as root + defaults
      chown system system /data
-@@ -178,7 +136,6 @@
+@@ -177,7 +136,6 @@
      # storing dumps on platforms which do not have a dedicated dump partition.
      mkdir /data/dontpanic 0750 root log
  
@@ -152,7 +168,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      # Collect apanic data, free resources and re-arm trigger
      copy /proc/apanic_console /data/dontpanic/apanic_console
      chown root log /data/dontpanic/apanic_console
-@@ -191,7 +148,7 @@
+@@ -190,7 +148,7 @@
      write /proc/apanic_console 1
  
      # create basic filesystem structure
@@ -161,7 +177,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      mkdir /data/misc/bluetoothd 0770 bluetooth bluetooth
      mkdir /data/misc/bluetooth 0770 system system
      mkdir /data/misc/keystore 0700 keystore keystore
-@@ -199,30 +156,24 @@
+@@ -198,30 +156,24 @@
      mkdir /data/misc/vpn 0770 system vpn
      mkdir /data/misc/systemkeys 0700 system system
      # give system access to wpa_supplicant.conf for backup and restore
@@ -182,13 +198,13 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      mkdir /data/property 0700 root root
 -    mkdir /data/misc/radio 0775 radio system
 -    mkdir /data/misc/radio/hatp 0775 radio system    
-+    mkdir /data/radio 0770 radio radio
- 
+-
 -    # for TRP/TIS
 -    write /data/.psm.info 1
 -    chown system root /data/.psm.info
 -    chmod 0660 /data/.psm.info
--
++    mkdir /data/radio 0770 radio radio
+ 
 -    # create dalvik-cache, so as to enforce our permissions
 +    # create dalvik-cache and double-check the perms, so as to enforce our permissions
      mkdir /data/dalvik-cache 0771 system system
@@ -201,7 +217,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
      # create resource-cache and double-check the perms
      mkdir /data/resource-cache 0771 system system
-@@ -232,95 +183,9 @@
+@@ -231,95 +183,9 @@
      # create the lost+found directories, so as to enforce our permissions
      mkdir /data/lost+found 0770 root root
  
@@ -300,7 +316,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
      # If there is no fs-post-data action in the init.<device>.rc file, you
      # must uncomment this line, otherwise encrypted filesystems
-@@ -333,62 +198,10 @@
+@@ -332,64 +198,10 @@
      chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
      chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
  
@@ -340,6 +356,8 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 -    chown system system /data/app/mcRegistry/ffffffff000000000000000000000004.tlbin
 -    copy /system/app/mcRegistry/ffffffff000000000000000000000005.tlbin /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
 -    chown system system /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+-    copy /system/app/mcRegistry/02010000080300030000000000000000.tlbin /data/app/mcRegistry/02010000080300030000000000000000.tlbin
+-    chown system system /data/app/mcRegistry/02010000080300030000000000000000.tlbin
 -
 -# icd
 -    exec icd_check
@@ -366,7 +384,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  # basic network init
      ifup lo
      hostname localhost
-@@ -420,35 +233,13 @@
+@@ -421,35 +233,13 @@
      chown radio system /sys/power/state
      chown radio system /sys/power/wake_lock
      chown radio system /sys/power/wake_unlock
@@ -402,7 +420,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      chown system system /sys/class/leds/jogball-backlight/brightness
      chown system system /sys/class/leds/red/brightness
      chown system system /sys/class/leds/green/brightness
-@@ -472,227 +263,40 @@
+@@ -473,234 +263,40 @@
      chown system system /sys/kernel/ipv4/tcp_rmem_max
      chown root radio /proc/cmdline
  
@@ -426,6 +444,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 -    chown system radio /sys/class/power_supply/battery/test_mode
 -    chown system radio /sys/class/power_supply/battery/wc_status
 -    chown system radio /sys/class/power_supply/battery/wpc_pin_state
+-    chown system radio /sys/class/power_supply/battery/update
 -
 -# Thermistor node
 -    chown radio system /sys/devices/platform/sec-thermistor/temp_adc
@@ -623,8 +642,22 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
      setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
  
+-# for sales_code read permission
+-    chown radio system /efs/imei
+-    chown radio system /efs/imei/mps_code.dat
+-    chmod 775 /efs/imei/mps_code.dat
+-    
+-    
 -# wifi display
--    write /proc/sys/net/core/wmem_max   262144
+-    write /proc/sys/net/core/wmem_max   2097152
+-
+-# klaatu tdmb ownership
+-    chown system system /dev/tdmb
+-    chmod 0660 /dev/tdmb
+-
+-# permission for HDMI audio path
+-    chown media audio /sys/class/hdmi_audio/hdmi_audio/hdmi_audio_set_ext
+-    
 +# allow system to modify ksm control files
 +    chown root system /sys/kernel/mm/ksm/pages_to_scan
 +    chmod 0664 /sys/kernel/mm/ksm/pages_to_scan
@@ -634,14 +667,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 +    chmod 0664 /sys/kernel/mm/ksm/run
 +    write /sys/kernel/mm/ksm/sleep_millisecs 1500
 +    write /sys/kernel/mm/ksm/pages_to_scan 256
- 
--# klaatu tdmb ownership
--    chown system system /dev/tdmb
--    chmod 0660 /dev/tdmb
--
--# permission for HDMI audio path
--    chown media audio /sys/class/hdmi_audio/hdmi_audio/hdmi_audio_set_ext
--    
++
  # Set this property so surfaceflinger is not started by system_init
      setprop system_init.startsurfaceflinger 0
  
@@ -651,7 +677,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      class_start core
      class_start main
  
-@@ -710,8 +314,7 @@
+@@ -718,8 +314,7 @@
  
  on property:vold.decrypt=trigger_post_fs_data
      trigger post-fs-data
@@ -661,7 +687,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  on property:vold.decrypt=trigger_restart_min_framework
      class_start main
  
-@@ -766,12 +369,6 @@
+@@ -774,12 +369,6 @@
  on property:persist.sys.usb.config=*
      setprop sys.usb.config $persist.sys.usb.config
  
@@ -674,7 +700,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  ## Daemon processes to be run by init.
  ##
  service ueventd /sbin/ueventd
-@@ -782,21 +379,12 @@
+@@ -790,21 +379,12 @@
      class core
      console
      disabled
@@ -697,7 +723,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  # adbd is controlled via property triggers in init.<platform>.usb.rc
  service adbd /sbin/adbd
      class core
-@@ -818,13 +406,6 @@
+@@ -826,13 +406,6 @@
      restart adbd
      write /sys/class/android_usb/android0/enable 1
  
@@ -711,7 +737,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  service servicemanager /system/bin/servicemanager
      class core
      user system
-@@ -839,7 +420,6 @@
+@@ -847,7 +420,6 @@
      class core
      socket vold stream 0660 root mount
      ioprio be 2
@@ -719,7 +745,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
  service netd /system/bin/netd
      class main
-@@ -849,60 +429,12 @@
+@@ -857,65 +429,12 @@
  service debuggerd /system/bin/debuggerd
      class main
  
@@ -772,6 +798,11 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 -    class main
 -    user root
 -    group system radio inet net_raw
+-
+-service BCS-daemon /system/bin/connfwexe
+-    class main
+-    user root
+-    group system radio inet net_raw
 -    
 -service mobex-daemon /system/bin/npsmobex
 -    class main
@@ -781,7 +812,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  
  service surfaceflinger /system/bin/surfaceflinger
      class main
-@@ -921,21 +453,14 @@
+@@ -934,21 +453,14 @@
  service drm /system/bin/drmserver
      class main
      user drm
@@ -805,7 +836,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  service bootanim /system/bin/bootanimation
      class main
      user graphics
-@@ -943,69 +468,13 @@
+@@ -956,69 +468,13 @@
      disabled
      oneshot
  
@@ -876,7 +907,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
      class main
      socket bluetooth stream 660 bluetooth bluetooth
      socket dbus_bluetooth stream 660 bluetooth bluetooth
-@@ -1014,20 +483,10 @@
+@@ -1027,20 +483,10 @@
      group bluetooth net_bt_admin misc
      disabled
  
@@ -897,7 +928,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  service racoon /system/bin/racoon
      class main
      socket racoon stream 600 system system
-@@ -1044,11 +503,6 @@
+@@ -1057,11 +503,6 @@
      disabled
      oneshot
  
@@ -909,7 +940,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  service keystore /system/bin/keystore /data/misc/keystore
      class main
      user keystore
-@@ -1061,57 +515,13 @@
+@@ -1074,57 +515,13 @@
      disabled
      oneshot
  
@@ -930,7 +961,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
 -service TvoutService_C /system/bin/bintvoutservice
 -     class main
 -     user system
--     group graphics
+-     group system
 -
 -on property:ro.tvout.enable=false
 -	stop TvoutService_C 
@@ -975,7 +1006,7 @@ diff -ruN init.samsung/init.rc init.cm9/init.rc
  service postinit /sbin/ext/post-init.sh
  	class core
 diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
---- init.samsung/init.smdk4x12.rc	2012-06-16 16:24:45.326765346 +0300
+--- init.samsung/init.smdk4x12.rc	2012-06-04 18:33:35.933070094 +0300
 +++ init.cm9/init.smdk4x12.rc	2012-06-28 23:06:50.000000000 +0300
 @@ -3,28 +3,368 @@
  
@@ -1457,7 +1488,7 @@ diff -ruN init.samsung/init.smdk4x12.rc init.cm9/init.smdk4x12.rc
 +     group graphics
 +
 diff -ruN init.samsung/lpm.rc init.cm9/lpm.rc
---- init.samsung/lpm.rc	2012-06-16 13:10:12.351170810 +0300
+--- init.samsung/lpm.rc	2012-07-11 23:22:44.000000000 +0300
 +++ init.cm9/lpm.rc	2012-06-19 19:03:09.000000000 +0300
 @@ -2,7 +2,6 @@
      start ueventd
@@ -1467,22 +1498,21 @@ diff -ruN init.samsung/lpm.rc init.cm9/lpm.rc
      export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
      export LD_LIBRARY_PATH /vendor/lib:/system/lib
      export ANDROID_ROOT /system
-@@ -23,14 +22,10 @@
+@@ -23,12 +22,10 @@
      #mount /tmp /tmp tmpfs   
  
  on early-fs
 -	insmod /lib/modules/vibrator.ko
 - 
      mount ext4 /dev/block/mmcblk0p9 /system ro wait noatime
--    exec sfsck /dev/block/mmcblk0p12 ext4
-     mount ext4 /dev/block/mmcblk0p12 /data wait nosuid nodev noatime discard,noauto_da_alloc,journal_async_commit
++    mount ext4 /dev/block/mmcblk0p12 /data wait nosuid nodev noatime discard,noauto_da_alloc,journal_async_commit
  
  	mkdir /data/log 0777
 -
  	chmod 0666 /dev/log/radio
  	chmod 0666 /dev/log/main
  	chmod 0666 /dev/log/event    
-@@ -52,21 +47,20 @@
+@@ -50,21 +47,20 @@
  
  service debuggerd /system/bin/debuggerd
  
@@ -1511,7 +1541,7 @@ diff -ruN init.samsung/lpm.rc init.cm9/lpm.rc
  # adbd is controlled by the persist.service.adb.enable system property
  service adbd /sbin/adbd
 diff -ruN init.samsung/ueventd.rc init.cm9/ueventd.rc
---- init.samsung/ueventd.rc	2012-06-16 13:10:12.351170810 +0300
+--- init.samsung/ueventd.rc	2012-06-04 18:33:35.949070096 +0300
 +++ init.cm9/ueventd.rc	2012-06-16 12:52:49.063207049 +0300
 @@ -38,7 +38,7 @@
  /dev/adsp/*               0660   system     audio
@@ -1531,7 +1561,7 @@ diff -ruN init.samsung/ueventd.rc init.cm9/ueventd.rc
  # CDMA radio interface MUX
  /dev/ts0710mux*           0640   radio      radio
 diff -ruN init.samsung/ueventd.smdk4x12.rc init.cm9/ueventd.smdk4x12.rc
---- init.samsung/ueventd.smdk4x12.rc	2012-06-20 09:57:38.000000000 +0300
+--- init.samsung/ueventd.smdk4x12.rc	2012-07-11 23:22:51.000000000 +0300
 +++ init.cm9/ueventd.smdk4x12.rc	2012-06-17 02:37:06.000000000 +0300
 @@ -2,13 +2,14 @@
  /dev/ump                  0666   system     graphics
@@ -1552,10 +1582,12 @@ diff -ruN init.samsung/ueventd.smdk4x12.rc init.cm9/ueventd.smdk4x12.rc
  /dev/video11              0666   system     system
  /dev/video12              0666   system     system
  /dev/video16              0666   system     system
-@@ -33,3 +34,6 @@
+@@ -32,4 +33,7 @@
+ 
  /dev/ttySAC*	          0660	 root	 system
  
- /dev/input/*              0666   root       input
+-/dev/input/*              0664   root       input
++/dev/input/*              0666   root       input
 +
 +# for wifi
 +/dev/rfkill               0666   system     system

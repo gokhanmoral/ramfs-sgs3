@@ -10,7 +10,7 @@ chmod 777 /data/.siyah
 ccxmlsum=`md5sum /res/customconfig/customconfig.xml | awk '{print $1}'`
 if [ "a${ccxmlsum}" != "a`cat /data/.siyah/.ccxmlsum`" ];
 then
-  rm -f /data/.siyah/*.profile
+#  rm -f /data/.siyah/*.profile
   echo ${ccxmlsum} > /data/.siyah/.ccxmlsum
 fi
 [ ! -f /data/.siyah/default.profile ] && cp /res/customconfig/default.profile /data/.siyah
@@ -44,9 +44,6 @@ fi
 
 /sbin/busybox sh /sbin/ext/install.sh
 
-# run this because user may have chosen not to install root at boot but he may need it later and install it using ExTweaks
-/sbin/busybox sh /sbin/ext/su-helper.sh
-
 ##### Early-init phase tweaks #####
 /sbin/busybox sh /sbin/ext/tweaks.sh
 
@@ -54,8 +51,6 @@ fi
 
 ##### EFS Backup #####
 (
-# make sure that sdcard is mounted
-sleep 30
 /sbin/busybox sh /sbin/ext/efs-backup.sh
 ) &
 
@@ -63,6 +58,4 @@ sleep 30
 /res/uci.sh apply
 
 ##### init scripts #####
-(
 /sbin/busybox sh /sbin/ext/run-init-scripts.sh
-)&

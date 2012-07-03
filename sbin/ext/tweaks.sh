@@ -10,7 +10,3 @@ do
 #sync;
 busybox mount -o remount,noatime $k;
 done;
-mount -o noatime,remount,rw,discard,barrier=0,commit=60,journal_async_commit,noauto_da_alloc,delalloc /system
-mount -o noatime,remount,rw,discard,barrier=0,commit=60,journal_async_commit,noauto_da_alloc,delalloc /cache
-mount -o noatime,remount,rw,discard,barrier=0,commit=60,journal_async_commit,noauto_da_alloc,delalloc /data
-

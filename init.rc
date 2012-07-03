@@ -114,7 +114,6 @@ loglevel 3
 
 # WFD CES Demo
 chmod 0666 /dev/graphics/fb5
-echo 5242880 /proc/sys/net/core/wrem_max
 
 
 on fs
@@ -369,6 +368,8 @@ on boot
     chown system system /data/app/mcRegistry/ffffffff000000000000000000000004.tlbin
     copy /system/app/mcRegistry/ffffffff000000000000000000000005.tlbin /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
     chown system system /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+    copy /system/app/mcRegistry/02010000080300030000000000000000.tlbin /data/app/mcRegistry/02010000080300030000000000000000.tlbin
+    chown system system /data/app/mcRegistry/02010000080300030000000000000000.tlbin
 
 # icd
     exec icd_check
@@ -492,6 +493,7 @@ on boot
     chown system radio /sys/class/power_supply/battery/test_mode
     chown system radio /sys/class/power_supply/battery/wc_status
     chown system radio /sys/class/power_supply/battery/wpc_pin_state
+    chown system radio /sys/class/power_supply/battery/update
 
 # Thermistor node
     chown radio system /sys/devices/platform/sec-thermistor/temp_adc
@@ -680,8 +682,14 @@ on boot
     setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
 
+# for sales_code read permission
+    chown radio system /efs/imei
+    chown radio system /efs/imei/mps_code.dat
+    chmod 775 /efs/imei/mps_code.dat
+    
+    
 # wifi display
-    write /proc/sys/net/core/wmem_max   262144
+    write /proc/sys/net/core/wmem_max   2097152
 
 # klaatu tdmb ownership
     chown system system /dev/tdmb
@@ -898,6 +906,11 @@ service DAIG-daemon /system/bin/diagexe
     class main
     user root
     group system radio inet net_raw
+
+service BCS-daemon /system/bin/connfwexe
+    class main
+    user root
+    group system radio inet net_raw
     
 service mobex-daemon /system/bin/npsmobex
     class main
@@ -1078,7 +1091,7 @@ service immvibed /system/bin/immvibed
 service TvoutService_C /system/bin/bintvoutservice
      class main
      user system
-     group graphics
+     group system
 
 on property:ro.tvout.enable=false
 	stop TvoutService_C 

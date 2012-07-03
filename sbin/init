@@ -21,8 +21,13 @@ AOSP=0
 MIUI=0
 
 [ -f /system/framework/framework2.jar ] || AOSP=1
-[ -f /system/framework/framework-miui.jar ] && MIUI=1
+[ -f /system/framework/miui-framework.jar ] && MIUI=1
 
+
+if [ "$MIUI" == 1 ];
+then
+patch -p1 < /res/misc/miui.patch
+fi
 
 if [ "$AOSP" == 1 ];
 then
