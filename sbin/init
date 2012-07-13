@@ -19,25 +19,35 @@ mount -t ext4 /dev/block/mmcblk0p9 /system
 
 AOSP=0
 MIUI=0
+CM10=0
 
 [ -f /system/framework/framework2.jar ] || AOSP=1
 [ -f /system/framework/miui-framework.jar ] && MIUI=1
+[ -f /system/lib/ssl/engines/libkeystore.so ] && CM10=1
 
-
-if [ "$MIUI" == 1 ];
-then
-patch -p1 < /res/misc/miui.patch
-fi
-
-if [ "$AOSP" == 1 ];
+if [ "$CM10" == 1 ];
 then
 echo 1 > /proc/sys/kernel/rom_feature_set
-patch -p1 < /res/misc/cm9.patch
+mv -f /res/misc/init.cm10/* /
 busybox umount /system
-exec /sbin/init.cm9
+rm -rf /res/misc/*
+exec /sbin/init2
+fi
+
+if [ "$MIUI" == "1" ];
+then
+echo nothing for now..
+fi
+
+if [ "$AOSP" == "1" ];
+then
+echo 1 > /proc/sys/kernel/rom_feature_set
+mv -f /res/misc/init.cm9/* /
 else
 echo 0 > /proc/sys/kernel/rom_feature_set
-busybox umount /system
-exec /sbin/init.samsung
 fi;
+
+umount /system
+rm -rf /res/misc/*
+exec /sbin/init2
 

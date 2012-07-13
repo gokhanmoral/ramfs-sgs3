@@ -19,10 +19,10 @@ fi
 
 if [ "$bass_boost_effect" == "0" ];then
   echo 0 > /sys/class/misc/scoobydoo_sound/digital_gain
+  echo 0 > /sys/class/misc/scoobydoo_sound/headphone_eq_b1_gain
+  echo 0 > /sys/class/misc/scoobydoo_sound/headphone_eq_b2_gain
   echo 0 > /sys/class/misc/scoobydoo_sound/headphone_eq
-  exit
-fi
-
+else
 d=-`expr $bass_boost_gain \* 1000 \* $dynamic_range \/ 100`
 echo $d > /sys/class/misc/scoobydoo_sound/digital_gain
 
@@ -64,5 +64,5 @@ case "$bass_boost_effect" in
     echo 1 > /sys/class/misc/scoobydoo_sound/headphone_eq
     ;;
 esac;
- 
+fi 
 

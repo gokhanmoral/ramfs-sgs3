@@ -138,11 +138,7 @@
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>
-      <spinner description="For 48kHz sample rate, the ADC oversample rate is 128fs when this setting is selected (otherwise 64fs mode) which makes the recording quality better." name="ADC OverSampling" action="generic /sys/class/misc/scoobydoo_sound/adc_osr128">
-             <spinnerItem name="Disabled" value="0"/> 
-             <spinnerItem name="Enabled" value="1"/> 
-      </spinner>
-      <spinner description="Bypass analog channel mixer and redirect the sound directly to the output." name="dac me" action="generic /sys/class/misc/scoobydoo_sound/dac_direct">
+      <spinner description="Bypass analog channel mixer and redirect the sound directly to the output." name="dac direct" action="generic /sys/class/misc/scoobydoo_sound/dac_direct">
              <spinnerItem name="Disabled" value="0"/> 
              <spinnerItem name="Enabled" value="1"/> 
       </spinner>

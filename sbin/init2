@@ -1,0 +1,5 @@
+#!/sbin/busybox sh
+
+mv /innt /init
+cd /
+exec /init
