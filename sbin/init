@@ -10,7 +10,7 @@ if busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
   echo 0 > /proc/sys/kernel/rom_feature_set
   cp lpm.rc init.rc
   rm init.smdk4x12.rc
-  exec /sbin/init.samsung
+  exec /sbin/init2
 fi
 
 mkdir -p /dev/block

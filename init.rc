@@ -384,6 +384,7 @@ on boot
     mkdir /data/system/hdcp2 0775 system system
 
 # h2k permission
+    chown system system /efs/redata.bin
     chmod 0644 /efs/redata.bin
     chmod 0644 /efs/h2k.dat
 

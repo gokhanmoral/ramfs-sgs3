@@ -116,18 +116,38 @@
       <seekBar description="3D Effect Gain Level (0-31)" 
 		name="3D Effect Gain" action="generic /sys/class/misc/scoobydoo_sound/stereo_expansion_gain" unit="" min="0" reversed="false" step="1" max="31"/>
     </settingsPane>
-    <settingsPane description="Gimme-drums Settings" name="Gimme-Drums (Bass)">
-      <spinner description="Gimme-drums effect. If disabled, the other settings in this group will not be effective." name="Gimme-drums Effect" action="bass-boost bass_boost_effect">
-             <spinnerItem name="Disabled" value="0"/> 
-             <spinnerItem name="Level1" value="1"/> 
-             <spinnerItem name="Level2" value="2"/> 
-             <spinnerItem name="Level3" value="3"/> 
-             <spinnerItem name="Level4" value="4"/> 
+    <settingsPane description="EQ Settings" name="EQ Settings">
+      <spinner description="Choose which equalizer settings to use: Presets or Graphical Equalizer." name="EQ Presets" action="eq-presets eq_selection">
+             <spinnerItem name="Use presets" value="0"/> 
+             <spinnerItem name="Use graphical equalizer" value="1"/> 
       </spinner>
-      <seekBar description="Gimme-drums Gain Level" 
-		name="Gimme-drums Gain" action="bass-boost bass_boost_gain" unit="" min="0" reversed="false" step="1" max="12"/>
-      <seekBar description="Dynamic Range (100 recommended). This will prevent distortion by decreasing the output volume by the the selected percentage of gain amount." 
-		name="Dynamic Range" action="bass-boost dynamic_range" unit=" percent" min="0" reversed="false" step="20" max="100"/>
+    </settingsPane>
+    <settingsPane description="EQ Presets" name="EQ Presets">
+      <spinner description="Hardware Equalizer Presets" name="EQ Presets" action="eq-presets eq_preset">
+             <spinnerItem name="Flat (Disabled)" value="0"/> 
+             <spinnerItem name="Bass-extreme" value="1"/> 
+             <spinnerItem name="Bass and Treble" value="2"/> 
+             <spinnerItem name="Treble" value="3"/> 
+             <spinnerItem name="Classic" value="4"/> 
+             <spinnerItem name="Pleasant for ears" value="5"/> 
+             <spinnerItem name="Eargasm" value="6"/> 
+      </spinner>
+    </settingsPane>
+    <settingsPane description="Graphical Equalizer" name="Graphical Equalizer">
+      <seekBar description="" 
+		name="Band1 gain" action="eq-presets eq_band1" unit=" dB" min="-12" reversed="false" step="1" max="12"/>
+      <seekBar description="" 
+		name="Band2 gain" action="eq-presets eq_band2" unit=" dB" min="-12" reversed="false" step="1" max="12"/>
+      <seekBar description="" 
+		name="Band3 gain" action="eq-presets eq_band3" unit=" dB" min="-12" reversed="false" step="1" max="12"/>
+      <seekBar description="" 
+		name="Band4 gain" action="eq-presets eq_band4" unit=" dB" min="-12" reversed="false" step="1" max="12"/>
+      <seekBar description="" 
+		name="Band5 gain" action="eq-presets eq_band5" unit=" dB" min="-12" reversed="false" step="1" max="12"/>
+    </settingsPane>
+    <settingsPane description="EQ Extras" name="EQ Extras">
+      <seekBar description="This will prevent distortion by decreasing the output volume by the selected amount. Leave it 0 if you do not have a distortion problem." 
+		name="Negative Digital Gain" action="eq-presets digital_gain" unit=" dB" min="0" reversed="false" step="1" max="12"/>
     </settingsPane>
     <settingsPane description="Optimization, conversion quality, signal processing and effect settings" name="Other Settings">
       <spinner description="Tuned WM1811 FLL to generate clock source" name="FLL Tuning" action="generic /sys/class/misc/scoobydoo_sound/fll_tuning">
@@ -164,7 +184,6 @@
   </settingsTab>
   <settingsTab name="Misc">
     <settingsPane description="Misc Settings" name="Misc Settings">
-      <!-- button description="Back up the efs partition" name="BackupEFS" action="efs-backup" label="Backup EFS"/ -->
       <checkbox description="Enable or Disable Android Logger (needs restart)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
       <checkbox description="Enable or Disable insecure adbd. Requires restart." name="Insecure adbd" action="generic /tmp/insecure_adbd" label="Insecure adbd"/>
       <spinner description="This will set the default I/O scheduler. Default I/O scheduler will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
