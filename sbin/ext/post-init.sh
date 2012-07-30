@@ -54,7 +54,21 @@ fi
 /sbin/busybox sh /sbin/ext/efs-backup.sh
 ) &
 
-# apply ExTweaks defaults
+## fix media scanning problem with new clockworkmod
+(
+if [ -d /data/media/clockworkmod ];
+then
+  touch /data/media/clockworkmod/.nomedia
+fi
+sleep 30
+if [ -d /mnt/extSdCard/clockworkmod ];
+then
+  touch /mnt/extSdCard/clockworkmod/.nomedia
+fi
+) &
+
+# apply STweaks defaults
+sleep 12
 /res/uci.sh apply
 
 ##### init scripts #####

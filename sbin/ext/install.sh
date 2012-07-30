@@ -21,12 +21,6 @@ payload_extracted=0
 
 cd /
 
-if [ "$insecure_adbd" == "off" ];
-then
-  cp -a /sbin/adbd.secure /sbin/adbd
-  killall -9 adbd
-fi
-
 if [ "$install_root" == "on" ];
 then
   if [ -s /system/xbin/su ];

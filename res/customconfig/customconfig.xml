@@ -54,16 +54,106 @@
              <spinnerItem name="pegasusq" value="pegasusq"/> 
              <spinnerItem name="hotplug" value="hotplug"/> 
        </spinner>
-       <seekBar description="Scaling maximum frequency (Samsung default: 1400)"
-                name="scaling_max_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq" unit=" Mhz" min="100000" reversed="false" step="100000" max="1600000"/>
-       <seekBar description="Scaling minimum frequency (Samsung default: 200)"
-                name="scaling_min_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq" unit=" Mhz" min="100000" reversed="false" step="100000" max="1600000"/>
+       <seekBar description="Scaling maximum frequency (Samsung default: 1400000)"
+                name="scaling_max_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq" unit=" kHz" min="100000" reversed="false" step="100000" max="1600000"/>
+       <seekBar description="Scaling minimum frequency (Samsung default: 200000)"
+                name="scaling_min_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq" unit=" kHz" min="100000" reversed="false" step="100000" max="1600000"/>
     </settingsPane>
   </settingsTab>
 
   <settingsTab name="GPU">
-    <settingsPane description="GPU Frequency Settings." name="GPUFreq">
-      <checkbox description="Enable setting of mali resume frequency which is set after every idle and keeps the clock at 266MHz most of the time. Disable this to have more battery. Disabling this may reduce UI responsiviness." name="Mali Resume Freq" action="generic01 /sys/module/mali/parameters/mali_resume_freq_enabled" label="Mali Resume Freq"/>
+    <settingsPane description="GPU Frequency Settings. Default frequencies are: 160, 266, 350, 440MHz." name="GPUFreq">
+      <spinner description="Select the level to be used to boost GPU frequency when you touch the screen." name="Mali Touch Boost Level" action="generic /sys/module/mali/parameters/mali_touch_boost_level">
+             <spinnerItem name="Disabled" value="0"/> 
+             <spinnerItem name="Step2" value="1"/> 
+             <spinnerItem name="Step3" value="2"/> 
+             <spinnerItem name="Step4" value="3"/> 
+      </spinner>
+      <spinner description="Changes the first (lowest) GPU frequency step" name="GPU Freq Step1" action="gpu-freq 1">
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="700MHz" value="700"/> 
+             <spinnerItem name="666MHz" value="666"/> 
+             <spinnerItem name="640MHz" value="640"/> 
+             <spinnerItem name="600MHz" value="600"/> 
+             <spinnerItem name="533MHz" value="533"/> 
+             <spinnerItem name="440MHz" value="440"/> 
+             <spinnerItem name="350MHz" value="350"/> 
+             <spinnerItem name="333MHz" value="333"/> 
+             <spinnerItem name="300MHz" value="300"/> 
+             <spinnerItem name="275MHz" value="275"/> 
+             <spinnerItem name="266MHz" value="266"/> 
+             <spinnerItem name="160MHz" value="160"/> 
+             <spinnerItem name="108MHz" value="108"/> 
+             <spinnerItem name="54MHz" value="54"/> 
+      </spinner>
+      <spinner description="Changes the second GPU frequency step" name="GPU Freq Step2" action="gpu-freq 2">
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="700MHz" value="700"/> 
+             <spinnerItem name="666MHz" value="666"/> 
+             <spinnerItem name="640MHz" value="640"/> 
+             <spinnerItem name="600MHz" value="600"/> 
+             <spinnerItem name="533MHz" value="533"/> 
+             <spinnerItem name="440MHz" value="440"/> 
+             <spinnerItem name="350MHz" value="350"/> 
+             <spinnerItem name="333MHz" value="333"/> 
+             <spinnerItem name="300MHz" value="300"/> 
+             <spinnerItem name="275MHz" value="275"/> 
+             <spinnerItem name="266MHz" value="266"/> 
+             <spinnerItem name="160MHz" value="160"/> 
+             <spinnerItem name="108MHz" value="108"/> 
+             <spinnerItem name="54MHz" value="54"/> 
+      </spinner>
+      <spinner description="Changes the third GPU frequency step" name="GPU Freq Step3" action="gpu-freq 3">
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="700MHz" value="700"/> 
+             <spinnerItem name="666MHz" value="666"/> 
+             <spinnerItem name="640MHz" value="640"/> 
+             <spinnerItem name="600MHz" value="600"/> 
+             <spinnerItem name="533MHz" value="533"/> 
+             <spinnerItem name="440MHz" value="440"/> 
+             <spinnerItem name="350MHz" value="350"/> 
+             <spinnerItem name="333MHz" value="333"/> 
+             <spinnerItem name="300MHz" value="300"/> 
+             <spinnerItem name="275MHz" value="275"/> 
+             <spinnerItem name="266MHz" value="266"/> 
+             <spinnerItem name="160MHz" value="160"/> 
+             <spinnerItem name="108MHz" value="108"/> 
+             <spinnerItem name="54MHz" value="54"/> 
+      </spinner>
+      <spinner description="Changes the fourth GPU frequency step" name="GPU Freq Step4" action="gpu-freq 4">
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="700MHz" value="700"/> 
+             <spinnerItem name="666MHz" value="666"/> 
+             <spinnerItem name="640MHz" value="640"/> 
+             <spinnerItem name="600MHz" value="600"/> 
+             <spinnerItem name="533MHz" value="533"/> 
+             <spinnerItem name="440MHz" value="440"/> 
+             <spinnerItem name="350MHz" value="350"/> 
+             <spinnerItem name="333MHz" value="333"/> 
+             <spinnerItem name="300MHz" value="300"/> 
+             <spinnerItem name="275MHz" value="275"/> 
+             <spinnerItem name="266MHz" value="266"/> 
+             <spinnerItem name="160MHz" value="160"/> 
+             <spinnerItem name="108MHz" value="108"/> 
+             <spinnerItem name="54MHz" value="54"/> 
+      </spinner>
+      <spinner description="Changes the fourth GPU frequency step" name="GPU Freq Step5" action="gpu-freq 5">
+             <spinnerItem name="800MHz" value="800"/> 
+             <spinnerItem name="700MHz" value="700"/> 
+             <spinnerItem name="666MHz" value="666"/> 
+             <spinnerItem name="640MHz" value="640"/> 
+             <spinnerItem name="600MHz" value="600"/> 
+             <spinnerItem name="533MHz" value="533"/> 
+             <spinnerItem name="440MHz" value="440"/> 
+             <spinnerItem name="350MHz" value="350"/> 
+             <spinnerItem name="333MHz" value="333"/> 
+             <spinnerItem name="300MHz" value="300"/> 
+             <spinnerItem name="275MHz" value="275"/> 
+             <spinnerItem name="266MHz" value="266"/> 
+             <spinnerItem name="160MHz" value="160"/> 
+             <spinnerItem name="108MHz" value="108"/> 
+             <spinnerItem name="54MHz" value="54"/> 
+      </spinner>
     </settingsPane>
     <settingsPane description="GPU Voltage Levels: The defaults are 875, 900, 950 and 1025." name="GPU Voltage Levels">
       <seekBar description="GPU Voltage for the first (lowest) step" 
@@ -72,8 +162,10 @@
 		name="GPU Voltage Level2" action="gpu-voltage 2" unit="mV" min="600" reversed="false" step="25" max="1200"/>
       <seekBar description="GPU Voltage for the third step" 
 		name="GPU Voltage Level3" action="gpu-voltage 3" unit="mV" min="600" reversed="false" step="25" max="1200"/>
-      <seekBar description="GPU Voltage for the fourth (highest) step" 
+      <seekBar description="GPU Voltage for the fourth step" 
 		name="GPU Voltage Level4" action="gpu-voltage 4" unit="mV" min="600" reversed="false" step="25" max="1200"/>
+      <seekBar description="GPU Voltage for the fourth step" 
+		name="GPU Voltage Level5" action="gpu-voltage 5" unit="mV" min="600" reversed="false" step="25" max="1200"/>
     </settingsPane>
 
     <settingsPane description="GPU load thresholds to change between frequency steps. Defaults: 70, 62, 90, 85, 90, 90." name="GPU Thresholds">
@@ -89,21 +181,19 @@
 		name="GPU Threshold 3-UP" action="gpu-thresh 3UP" unit="%" min="0" reversed="false" step="5" max="100"/>
       <seekBar description="GPU threshold to jump down from fourth to third step" 
 		name="GPU Threshold 4-DOWN" action="gpu-thresh 4DOWN" unit="%" min="0" reversed="false" step="5" max="100"/>
-    </settingsPane>
-
-    <settingsPane description="The number of cycles that the GPU stays at the specific level. The defaults are all 0." name="GPU StayCount">
-      <seekBar description="GPU first step (for the lowest freq) StayCount" 
-		name="GPU StayCount1" action="gpu-staycount 1" unit=" sec" min="0" reversed="false" step="1" max="5"/>
-      <seekBar description="GPU second step StayCount" 
-		name="GPU StayCount2" action="gpu-staycount 2" unit=" sec" min="0" reversed="false" step="1" max="5"/>
-      <seekBar description="GPU third step StayCount" 
-		name="GPU StayCount3" action="gpu-staycount 3" unit=" sec" min="0" reversed="false" step="1" max="5"/>
-      <seekBar description="GPU fourth step (for the highest freq) StayCount" 
-		name="GPU StayCount4" action="gpu-staycount 4" unit=" sec" min="0" reversed="false" step="1" max="5"/>
+      <seekBar description="GPU threshold to jump up from fourth to fifth step" 
+		name="GPU Threshold 4-UP" action="gpu-thresh 4UP" unit="%" min="0" reversed="false" step="5" max="100"/>
+      <seekBar description="GPU threshold to jump down from fifth to fourth step" 
+		name="GPU Threshold 5-DOWN" action="gpu-thresh 5DOWN" unit="%" min="0" reversed="false" step="5" max="100"/>
     </settingsPane>
   </settingsTab>
 
   <settingsTab name="Audio">
+    <settingsPane description="Speaker Tuning Settings" name="Speaker Tuning">
+      <checkbox description="Enable speaker tuning for better bass response on main speakers" name="Speaker Tuning" action="generic01 /sys/class/misc/scoobydoo_sound/speaker_tuning" label="Speaker Tuning"/>
+      <seekBar description="Speaker Amplification Offset. 0 means stock value. Having too much amplification may cause distortion." 
+		name="Speaker Amplification Offset" action="generic /sys/class/misc/scoobydoo_sound/speaker_offset" unit="" min="-6" reversed="false" step="1" max="6"/>
+    </settingsPane>
     <settingsPane description="Headphone Amplification Settings" name="Headphone Amplification">
       <seekBar description="Headphone Amplifier Level (0-63 which corresponds to -57db-6db)" 
 		name="Headphone Amplifier" action="generic /sys/class/misc/scoobydoo_sound/headphone_amplifier_level" unit="" min="0" reversed="false" step="1" max="63"/>
@@ -171,12 +261,22 @@
 
   <settingsTab name="Screen">
     <settingsPane description="Brightness Curve settings which modify auto-brightness behavior." name="Brightness Curve">
+       <seekBar description="Setting min_bl higher will result in staying lowest brightness level for brighter conditions (default 30)" 
+		name="min_bl" action="generic /sys/class/misc/brightness_curve/min_bl" unit="" min="0" reversed="false" step="10" max="150"/>
+       <seekBar description="Minimum brightness level (default 0)" 
+		name="min_gamma" action="generic /sys/class/misc/brightness_curve/min_gamma" unit="" min="0" reversed="false" step="1" max="24"/>
+       <seekBar description="Maximum brightness level (default 28)" 
+		name="max_gamma" action="generic /sys/class/misc/brightness_curve/max_gamma" unit="" min="0" reversed="false" step="1" max="35"/>
+    </settingsPane>
+    <settingsPane description="Other screen related settings" name="Other Settings">
        <checkbox description="Enable inverting the screen colors by quickly pressing Home button 4 times" name="mDNIe Negative Toggle" action="generic01 /sys/module/gpio_keys/parameters/mdnie_shortcut_enabled" label="mDNIe Negative Toggle"/>
        <spinner description="Set CPU freq boost level when you touch the screen. Lower levels will help with the battery with the cost of UI lags" name="Touch Boost Level" action="generickmem touch_boost_level 0 int">
              <spinnerItem name="Disabled" value="-1"/> 
              <spinnerItem name="1200MHz" value="6"/> 
              <spinnerItem name="1000MHz" value="8"/> 
              <spinnerItem name="800MHz (default)" value="10"/> 
+             <spinnerItem name="700MHz" value="11"/> 
+             <spinnerItem name="600MHz" value="12"/> 
              <spinnerItem name="500MHz" value="13"/> 
              <spinnerItem name="200MHz" value="16"/> 
        </spinner>
@@ -185,7 +285,6 @@
   <settingsTab name="Misc">
     <settingsPane description="Misc Settings" name="Misc Settings">
       <checkbox description="Enable or Disable Android Logger (needs restart)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
-      <checkbox description="Enable or Disable insecure adbd. Requires restart." name="Insecure adbd" action="generic /tmp/insecure_adbd" label="Insecure adbd"/>
       <spinner description="This will set the default I/O scheduler. Default I/O scheduler will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
              <spinnerItem name="sio" value="sio"/> 
              <spinnerItem name="noop" value="noop"/> 
@@ -193,10 +292,23 @@
              <spinnerItem name="vr" value="vr"/> 
              <spinnerItem name="cfq" value="cfq"/> 
       </spinner>
+      <spinner description="ZRAM (Compressed swap space in RAM) size" name="ZRAM Size" action="zram">
+             <spinnerItem name="disabled" value="0"/> 
+             <spinnerItem name="100MB" value="100"/> 
+             <spinnerItem name="150MB" value="150"/> 
+             <spinnerItem name="200MB" value="200"/> 
+             <spinnerItem name="250MB" value="250"/> 
+             <spinnerItem name="300MB" value="300"/> 
+      </spinner>
+      <spinner description="Notification LED Behavior" name="Notification LED Behavior" action="generic /sys/devices/virtual/sec/led/led_fade">
+             <spinnerItem name="ROM default" value="-1"/> 
+             <spinnerItem name="Blinking" value="0"/> 
+             <spinnerItem name="Fading" value="1"/> 
+      </spinner>
       <seekBar description="AC,CDP,Dock charge currents (default 1000)" 
 		name="AC Charge" action="chargecurrent_ac" unit="mA" min="800" reversed="false" step="100" max="1200"/>
       <seekBar description="USB charge current (default 475)" 
-		name="USB Charge" action="chargecurrent_usb" unit="mA" min="450" reversed="false" step="25" max="800"/>
+		name="USB Charge" action="chargecurrent_usb" unit="mA" min="450" reversed="false" step="25" max="900"/>
       <checkbox description="If checked, BetterBatteryStatus will report exclusive (non-overlapping) wakelock statistics." name="Exclusive Wakelock Stats" action="generic01 /sys/module/wakelock/parameters/default_stats" label="Exclusive Wakelock Stats"/>
     </settingsPane>
     <settingsPane description="Removing/Reinstalling root to support some apps which requires you not to have a rooted phone." name="Remove/Reinstall Root">
