@@ -8,6 +8,7 @@ tar xvf /res/misc/dev.tar
 if busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
   # low power mode
   echo 0 > /proc/sys/kernel/rom_feature_set
+  cp -a /res/misc/init.40/* /
   cp lpm.rc init.rc
   rm init.smdk4x12.rc
   exec /sbin/init2
