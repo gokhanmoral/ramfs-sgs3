@@ -30,6 +30,7 @@ JB=0
 
 if [ "$JB" == 1 ];
 then
+  mv -f /sbin/adbd.jb /sbin/adbd
   if [ "$CM10" == 1 ];
   then
     echo 1 > /proc/sys/kernel/rom_feature_set
@@ -48,8 +49,16 @@ else
     mv -f /res/misc/init.40/* /
   fi;
 fi
+
+if [ "$SECONDROM" == "1" ];then
+  mv /init.smdk4x12.rc.2 /init.smdk4x12.rc
+  mv /init.rc.2 /init.rc
+else
+  rm -f /init.rc.2 /init.smdk4x12.rc.2
+fi
+
 umount /system
-rm -rf /res/misc/*
+rm -rf /res/misc/init*
 chmod 755 /innt
 chmod 644 /*.rc
 chmod 644 /*.prop

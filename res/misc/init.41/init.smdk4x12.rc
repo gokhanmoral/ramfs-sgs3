@@ -26,11 +26,10 @@ on early-init
     mkdir /storage/UsbDriveF 0000 system system
 
     mkdir /efs 0771 radio system
+    
+    mkdir /preload 0771 system system 
 
 on init
-# ko files for FM Radio
-insmod /lib/modules/Si4709_driver.ko
-
 # Vibetonz
 export VIBE_PIPE_PATH /dev/pipes
 mkdir /dev/pipes 0771 shell shell
@@ -58,21 +57,13 @@ on post-fs-data
     chown dhcp dhcp /data/misc/dhcp
     chown system system /efs/wifi/.mac.info
     chmod 0664 /efs/wifi/.mac.info
-    
+
     mkdir /data/misc/radio 0775 radio system
 
     # for TRP/TIS
     write /data/.psm.info 1
     chown system root /data/.psm.info
     chmod 0660 /data/.psm.info
-
-    # for WIFI module
-    write /data/.cid.info 0
-    chown system root /data/.cid.info
-    chmod 0660 /data/.cid.info
-    write /data/.rev 0
-    chown system root /data/.rev
-    chmod 0660 /data/.rev
 
 on boot
 # SISO-ANDR_PERF :: START Changing scheduler to noop during boot
@@ -82,7 +73,7 @@ on boot
     setprop ro.build.product smdk4x12
     setprop ro.product.device smdk4x12
     setprop ro.radio.noril yes
-    
+
 # mobicore
     mkdir /data/app/mcRegistry 0775 system system
     chmod 0777 /dev/mobicore
@@ -101,6 +92,8 @@ on boot
     chown system system /data/app/mcRegistry/ffffffff000000000000000000000004.tlbin
     copy /system/app/mcRegistry/ffffffff000000000000000000000005.tlbin /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
     chown system system /data/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+    copy /system/app/mcRegistry/02010000080300030000000000000000.tlbin /data/app/mcRegistry/02010000080300030000000000000000.tlbin
+    chown system system /data/app/mcRegistry/02010000080300030000000000000000.tlbin
 
 # S.LSI secdrv mem
     chown system system /dev/s5p-smem
@@ -193,31 +186,22 @@ on boot
 # Vibetonz
     chmod 0660 /dev/tspdrv
     chown root shell /dev/tspdrv
-    
-# Permissions for touch
-    chown system radio /sys/class/sec/tsp/cmd
-
-# Permissions for Touchkey
-  	chown system radio /sys/class/sec/sec_touchkey/enable_disable 
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_back
-	chown system radio /sys/class/sec/sec_touchkey/touch_update
-	chown system radio /sys/class/sec/sec_touchkey/touch_version
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_panel
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_phone
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update_status
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update
-	chown system radio /sys/class/sec/sec_touchkey/touch_sensitivity
-	chown system radio /sys/class/sec/sec_touchkey/touchkey_threshold
-	chown system system /sys/devices/virtual/sec/sec_touchkey/brightness
 
 on fs
     mount_all /fstab.smdk4x12
     setprop ro.crypto.fuse_sdcard true
 
+# for LogMeIn
+    mount ext4 /dev/block/mmcblk0p9 /system rw wait noatime remount
+
+    chown graphics /system/bin/RescueStarter
+    chmod 0755 /system/bin/RescueStarter
+    chown graphics /system/bin/RescueServer
+    chmod 0755 /system/bin/RescueServer
+
+    mount ext4 /dev/block/mmcblk0p9 /system ro wait noatime remount
+	
 # Permissions for backlight
-    chmod 0666 /sys/class/backlight/panel/brightness
     chown system system /sys/class/backlight/panel/brightness
     chown system system /sys/class/sec/sec_touchkey/brightness
 
@@ -228,6 +212,10 @@ on fs
     chmod 0660 /sys/power/cpufreq_table
     chmod 0660 /sys/power/cpufreq_max_limit
     chmod 0660 /sys/power/cpufreq_min_limit
+
+# MTP device permission
+	chmod 0660 /dev/usb_mtp_gadget
+	chown system system /dev/usb_mtp_gadget
 
 # Permissions for Gscaler log level
     chmod 0666 /sys/module/gsc/parameters/gsc_dbg
@@ -249,7 +237,6 @@ on fs
     chown nfc nfc /dev/pn544
 
 # Permissions for LCD
-    chown system radio /sys/class/lcd/panel/lcd_power
     chown system radio /sys/class/lcd/panel/lcd_type
     chown system radio /sys/class/lcd/panel/device/hs_toggle
     chown system media_rw /sys/class/lcd/panel/power_reduce
@@ -266,12 +253,31 @@ on fs
     chown system radio /sys/class/host_notify/usb_otg/booster
     chmod 0660 /sys/class/host_notify/usb_otg/booster
 
+# Switch Device
+    chown system radio /sys/class/sec/switch/otg_test
+    chown system radio /sys/class/sec/switch/adc
+
+# IPC sysfs
+    chown radio radio /sys/devices/virtual/misc/multipdp/waketime
+
+on post-fs
+    chown radio system /efs
+    chmod 0771 /efs
+
+
 # SISO-ANDR_PERF :: START Changing scheduler to cfq and reseting cpu min freq to -1 after boot complete
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler cfq
     write /sys/power/cpufreq_min_limit -1
 # SISO-ANDR_PERF :: END
 
+on property:persist.sys.storage_preload=1
+    mount ext4 /dev/block/mmcblk0p10 /preload nosuid nodev noatime wait ro
+    setprop storage.preload.complete 1
+
+on property:persist.sys.storage_preload=0
+    exec /system/bin/umount /preload   
+    
 ## Daemon processes to be run by init.
 ##
 service ueventd /sbin/ueventd
@@ -296,6 +302,15 @@ service setup_fs /system/bin/setup_fs \
     group root
     oneshot
 
+# RILD
+service ril-daemon /system/bin/rild
+    class main
+    socket rild stream 660 root radio
+    socket rild-debug stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_rw log sdcard_r
+    onrestart restart cpboot-daemon
+
 # create virtual SD card at /storage/sdcard, based on the /data/media directory
 # daemon will drop to user/group system/media_rw after initializing
 # underlying files in /data/media will be created with user and group media_rw (1023)
@@ -304,7 +319,7 @@ service sdcard /system/bin/sdcard /data/media 1023 1023
 
 
 #	-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
-service p2p_supplicant /system/bin/wpa_supplicant \
+service p2p_supplicant /system/bin/p2p_supplicant \
 	-ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1
 	class main
 	disabled
@@ -359,11 +374,11 @@ on property:ro.tvout.enable=false
 service cpboot-daemon /sbin/cbd -d
     class main
     user root
-    group radio cache inet misc audio sdcard_rw log
+    group radio cache inet misc audio sdcard_rw log sdcard_r
 
 # mobicore
 service mcDriverDaemon /system/bin/mcDriverDaemon -r /data/app/FFFFFFFF000000000000000000000001.drbin
-    class main
+    class late_start
     user system
     group system
 
@@ -390,4 +405,16 @@ service wlandutservice /system/bin/wlandutservice
 service macloader /system/bin/macloader
 	class main
 	oneshot
+
+on property:init.svc.macloader=stopped
+    chown system root /data/.cid.info
+    chmod 0664 /data/.cid.info
+    chown system root /data/.rev
+    chmod 0660 /data/.rev
 # end of wifi
+
+# for LogMeIn
+    service RescueStarter /system/bin/RescueStarter
+    class core
+    user graphics
+    group input graphics

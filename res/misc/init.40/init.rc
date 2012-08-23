@@ -67,9 +67,6 @@ loglevel 3
     mkdir /mnt/obb 0700 root system
     mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
 
-    # For ntfs automounting
-    mkdir /mnt/ntfs 0755 root system
-    mount tmpfs tmpfs /mnt/ntfs mode=0755,gid=1000
 
     write /proc/sys/kernel/panic_on_oops 1
     write /proc/sys/kernel/hung_task_timeout_secs 0
@@ -888,10 +885,10 @@ service DR-daemon /system/bin/ddexe
     user root
     group system radio inet net_raw
 
-service KIES-daemon /system/bin/kiesexe
-    class main
-    user root
-    group system radio inet net_raw
+#service KIES-daemon /system/bin/kiesexe
+#    class main
+#    user root
+#    group system radio inet net_raw
 
 service SMD-daemon /system/bin/smdexe
     class main

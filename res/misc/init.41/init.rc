@@ -12,11 +12,14 @@ on early-init
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_adj -16
 
+    symlink /efs /factory
     start ueventd
 
 # create mountpoints
     mkdir /mnt 0775 root system
 
+
+    
 on init
 
 sysclktz 0
@@ -37,6 +40,7 @@ loglevel 3
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
+
 
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.
@@ -70,10 +74,6 @@ loglevel 3
     mkdir /mnt/obb 0700 root system
     mount tmpfs tmpfs /mnt/obb mode=0755,gid=1000
 
-    # For ntfs automounting
-    mkdir /mnt/ntfs 0755 root system
-    mount tmpfs tmpfs /mnt/ntfs mode=0755,gid=1000
-
     write /proc/sys/kernel/panic_on_oops 1
     write /proc/sys/kernel/hung_task_timeout_secs 0
     write /proc/cpu/alignment 4
@@ -82,7 +82,7 @@ loglevel 3
     write /proc/sys/kernel/sched_compat_yield 1
     write /proc/sys/kernel/sched_child_runs_first 0
     write /proc/sys/kernel/randomize_va_space 2
-    write /proc/sys/kernel/kptr_restrict 0
+    write /proc/sys/kernel/kptr_restrict 2
     write /proc/sys/kernel/dmesg_restrict 1
     write /proc/sys/vm/mmap_min_addr 32768
     write /proc/sys/kernel/sched_rt_runtime_us 950000
@@ -292,7 +292,17 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
+# MTP permission
+	chmod 0660 /dev/usb_mtp_gadget
+	chown system system /dev/usb_mtp_gadget
+
+# terminal mode
+    chmod 0660 /sys/class/android_usb/android0/terminal_version
+    chown system system /sys/class/android_usb/android0/terminal_version
+
 on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
 # Camera
 	mkdir /data/cfw 0775 system system
 # basic network init
@@ -323,7 +333,7 @@ on boot
     chown radio system /sys/android_power/acquire_full_wake_lock
     chown radio system /sys/android_power/acquire_partial_wake_lock
     chown radio system /sys/android_power/release_wake_lock
-    chown system system /sys/power/state
+    chown radio system /sys/power/state
     chown system system /sys/power/wakeup_count
     chown radio system /sys/power/wake_lock
     chown radio system /sys/power/wake_unlock
@@ -335,8 +345,8 @@ on boot
     chown radio system /sys/power/cpufreq_max_limit
     chown radio system /sys/power/cpufreq_min_limit
     chown radio system /sys/power/mali_lock
-    chown radio system /sys/class/power_supply/battery/siop_activated
     chown radio system /sys/devices/system/cpu/cpufreq/pegasusq/max_cpu_lock
+    chown radio system /sys/devices/system/cpu/cpufreq/pegasusq/min_cpu_lock
     chown radio system /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_lock
     chown radio system /sys/devices/system/cpu/busfreq/curr_freq
     chown radio system /sys/module/mali/parameters/mali_dvfs_control
@@ -346,7 +356,9 @@ on boot
     chmod 0660 /sys/power/cpufreq_min_limit
     chmod 0660 /sys/power/mali_lock
     chmod 0660 /sys/class/power_supply/battery/siop_activated
+    chmod 0660 /sys/class/power_supply/battery/siop_level
     chmod 0660 /sys/devices/system/cpu/cpufreq/pegasusq/max_cpu_lock
+    chmod 0660 /sys/devices/system/cpu/cpufreq/pegasusq/min_cpu_lock
     chmod 0660 /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_lock
     chmod 0660 /sys/devices/system/cpu/busfreq/curr_freq
     chmod 0660 /sys/module/mali/parameters/mali_dvfs_control
@@ -399,6 +411,91 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_max
     chown root radio /proc/cmdline
 
+# Audio (Earjack)
+    chown system radio /sys/class/audio/earjack/select_jack
+    chown system radio /sys/class/audio/earjack/key_state
+    chown system radio /sys/class/audio/earjack/state
+    chown media system /sys/class/audio/earjack/reselect_jack 
+
+# Battery node
+    chown system radio /sys/class/power_supply/battery/batt_charging_source
+    chown system radio /sys/class/power_supply/battery/batt_error_test
+    chown system radio /sys/class/power_supply/battery/batt_lp_charging
+    chown system radio /sys/class/power_supply/battery/batt_read_adj_soc
+    chown system radio /sys/class/power_supply/battery/batt_read_raw_soc
+    chown system radio /sys/class/power_supply/battery/batt_reset_soc
+    chown system radio /sys/class/power_supply/battery/batt_slate_mode
+    chown system radio /sys/class/power_supply/battery/batt_temp_adc
+    chown system radio /sys/class/power_supply/battery/batt_temp_adc_aver
+    chown system radio /sys/class/power_supply/battery/batt_temp_adc_cal
+    chown system radio /sys/class/power_supply/battery/batt_temp_aver
+    chown system radio /sys/class/power_supply/battery/batt_type
+    chown system radio /sys/class/power_supply/battery/batt_vf_adc
+    chown system radio /sys/class/power_supply/battery/batt_vfocv
+    chown system radio /sys/class/power_supply/battery/batt_vol_adc
+    chown system radio /sys/class/power_supply/battery/batt_vol_adc_aver
+    chown system radio /sys/class/power_supply/battery/batt_vol_adc_cal
+    chown system radio /sys/class/power_supply/battery/batt_vol_aver
+    chown system radio /sys/class/power_supply/battery/factory_mode
+    chown system radio /sys/class/power_supply/battery/siop_activated
+    chown system radio /sys/class/power_supply/battery/siop_level
+    chown system radio /sys/class/power_supply/battery/update
+    chown system radio /sys/class/power_supply/battery/wc_status
+    chown system radio /sys/class/power_supply/battery/wpc_pin_state
+
+# CTIA event
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/call
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/video
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/music
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/browser
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/hotspot
+   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/camera
+   chown system radio /sys/class/power_supply/battery/talk_wcdma
+   chown system radio /sys/class/power_supply/battery/talk_gsm
+   chown system radio /sys/class/power_supply/battery/call
+   chown system radio /sys/class/power_supply/battery/data_call
+   chown gps radio /sys/class/power_supply/battery/gps
+   chown system radio /sys/class/power_supply/battery/wifi
+   chown system radio /sys/class/power_supply/battery/lte
+
+# Thermistor node
+    chown radio system /sys/devices/platform/sec-thermistor/temp_adc
+    chown radio system /sys/devices/platform/sec-thermistor/temperature
+
+# Permissions for touch
+    chown system radio /sys/class/sec/tsp/cmd
+
+# Permissions for WACOM
+    chown system radio /sys/class/sec/sec_epen/epen_firm_update
+    chown system radio /sys/class/sec/sec_epen/epen_rotation
+    chown system radio /sys/class/sec/sec_epen/epen_hand
+    chown system radio /sys/class/sec/sec_epen/epen_reset
+    chown system radio /sys/class/sec/sec_epen/epen_reset_result
+    chown system radio /sys/class/sec/sec_epen/epen_checksum
+    chown system radio /sys/class/sec/sec_epen/epen_checksum_result
+    chown system radio /sys/class/sec/sec_epen/epen_saving_mode
+# Firmware update
+    write /sys/class/sec/sec_epen/epen_firm_update R
+
+# Permissions for Touchkey
+	chown system radio /sys/class/sec/sec_touchkey/enable_disable
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_back
+	chown system radio /sys/class/sec/sec_touchkey/touch_update
+	chown system radio /sys/class/sec/sec_touchkey/touch_version
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_panel
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_version_phone
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update_status
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_firm_update
+	chown system radio /sys/class/sec/sec_touchkey/touch_sensitivity
+	chown system radio /sys/class/sec/sec_touchkey/touchkey_threshold
+	chown system system /sys/devices/virtual/sec/sec_touchkey/brightness
+
+# Permissions for gpio_keys
+    chown radio system /sys/class/sec/sec_key/wakeup_keys
+    write /sys/class/sec/sec_key/wakeup_keys 116,172,544
+
 # Permissions for Camera
     chown system radio /sys/class/camera/rear/rear_camfw
     chown system radio /sys/class/camera/rear/rear_camtype
@@ -407,6 +504,8 @@ on boot
     chown system radio /sys/class/camera/front/front_camfw
     chown system radio /sys/class/camera/front/front_camtype
     chown system radio /sys/class/camera/flash/rear_flash
+    chown radio system /sys/devices/platform/samsung-pd.5/s3c-fimc.2/range_mode
+    chmod 0660 /sys/devices/platform/samsung-pd.5/s3c-fimc.2/range_mode
 
 # Permissions for SVC LED
 	chown system system /sys/class/sec/led/led_r
@@ -427,18 +526,25 @@ on boot
 	chown system system /sys/class/sec/led/led_pattern
 	chown system system /sys/class/sec/led/led_blink
 	chown system system /sys/class/sec/led/led_br_lev
-	chown system system /sys/class/sec/led/led_brightness
+	chown system system /sys/class/sec/led/led_lowpower
 
 # Vibetonz
     chmod 0660 /dev/tspdrv
     chown root shell /dev/tspdrv
 
+# for datarouter
+    chown system system /dev/dun
+    chown system system /dev/ttyGS0
+    chown system system /dev/ttyGS1
+    chown system system /dev/ttyGS2
+    chown system system /dev/ttyGS3
+
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 4096,87380,704512,4096,16384,110208
+    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
     setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
     setprop net.tcp.buffersize.lte     524288,1048576,2560000,262144,524288,1220608
-    setprop net.tcp.buffersize.umts    4094,87380,563200,4096,16384,110208
+    setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
     setprop net.tcp.buffersize.hspa    4092,87380,704512,4096,16384,262144
     setprop net.tcp.buffersize.hsupa   4092,87380,704512,4096,16384,262144
     setprop net.tcp.buffersize.hsdpa   4092,87380,704512,4096,16384,110208
@@ -447,13 +553,12 @@ on boot
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
     setprop net.tcp.buffersize.evdo_b  4094,87380,262144,4096,16384,262144
 
-# tdmb ownership
-    chown system system /dev/tdmb
-    chmod 0660 /dev/tdmb
-
 # wifi display
     write /proc/sys/net/core/wmem_max   2097152
     chmod 0666 /dev/graphics/fb5
+
+# permission for HDMI audio path
+    chown media audio /sys/class/hdmi_audio/hdmi_audio/hdmi_audio_set_ext
 
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
@@ -473,9 +578,20 @@ on boot
 # h2k permission
     chown radio system /efs/redata.bin
     chmod 0644 /efs/h2k.dat
+    mkdir /data/misc/radio/hatp 0775 radio system
 
     class_start core
     class_start main
+
+# Init Compcache by taejin5.park
+    chmod 0664 /sys/class/lmk/lowmemorykiller/lmk_state
+    chown system system /sys/class/lmk/lowmemorykiller/lmk_state
+    chmod 0664 /sys/block/zram0/disksize
+    chown system system /sys/block/zram0/disksize
+    write /sys/block/zram0/disksize 209715200
+    chmod 0664 /sys/block/zram0/initstate
+    chown system system /sys/block/zram0/initstate
+    write /sys/block/zram0/initstate 1
 
 on nonencrypted
     class_start late_start
@@ -513,11 +629,20 @@ service console /system/bin/sh
     class core
     console
     disabled
-    user shell
     group log
+
+service console_user /system/bin/sh
+    class core
+    console
+    disabled
+    user shell
+    group shell log
 
 on property:ro.debuggable=1
     start console
+
+on property:ro.debuggable=0
+    start console_user
 
 # adbd is controlled via property triggers in init.<platform>.usb.rc
 service adbd /sbin/adbd
@@ -527,6 +652,10 @@ service adbd /sbin/adbd
 # adbd on at boot in emulator
 on property:ro.kernel.qemu=1
     start adbd
+
+
+
+
 
 service servicemanager /system/bin/servicemanager
     class core
@@ -578,13 +707,6 @@ service BCS-daemon /system/bin/connfwexe
     user root
     group system radio inet net_raw
 
-service ril-daemon /system/bin/rild
-    class main
-    socket rild stream 660 root radio
-    socket rild-debug stream 660 radio system
-    user root
-    group radio cache inet misc audio sdcard_rw log
-
 service mobex-daemon /system/bin/npsmobex
     class main
     user system
@@ -603,13 +725,14 @@ service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-sys
     onrestart write /sys/power/state on
     onrestart restart media
     onrestart restart netd
-
+    onrestart restart gsiff_daemon
+    
 service drm /system/bin/drmserver
     class main
     user drm
 # [ SEC_MM_DRM
 # fix
-    group drm system inet drmrpc sdcard_rw media_rw sdcard_r radio
+    group system drm inet drmrpc sdcard_rw media_rw sdcard_r radio
 # org
 #   group drm system inet drmrpc sdcard_r
 # ]
@@ -617,9 +740,9 @@ service drm /system/bin/drmserver
 service media /system/bin/mediaserver
     class main
     user media
-    group system audio camera inet net_bt net_bt_admin net_bw_acct drmrpc sdcard_rw
-    ioprio rt 4
-
+    group system audio camera inet net_bt net_bt_admin net_bw_acct drmrpc sdcard_rw sdcard_r skt lgt_gid media_rw
+	ioprio rt 4
+	
 service powersnd /system/bin/samsungpowersoundplay
     class main
     user media
@@ -662,6 +785,11 @@ service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
     disabled
     oneshot
 
+service iprenew_bnep0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
 service installd /system/bin/installd
     class main
     socket installd stream 600 system system
@@ -685,11 +813,6 @@ service mtpd /system/bin/mtpd
     group vpn net_admin inet net_raw
     disabled
     oneshot
-
-service dmb /system/bin/dmbserver
-    class main
-    user system
-    group radio inet misc audio camera graphics net_bt net_bt_admin sdcard_rw
 
 service keystore /system/bin/keystore /data/misc/keystore
     class main
@@ -733,14 +856,6 @@ service mdnsd /system/bin/mdnsd
     disabled
     oneshot
 
-
-service gpsd /system/bin/gpsd -c /system/etc/gps.xml
-    class main
-    socket gps seqpacket 0660 gps system
-    user gps
-    group system inet sdcard_rw
-    ioprio be 0
-
 # SA, System SW, SAMSUNG
 service bugreport /system/bin/bugmailer.sh -v
     class main
@@ -754,9 +869,14 @@ service icd /system/bin/icd
     user system
     group system log
     onrestart exec icd_check
+    oneshot
 
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
+
+on property:init.svc.media=restarting
+    exec icd_check
+    start icd
 
 service postinit /sbin/ext/post-init.sh
 	class core

@@ -24,6 +24,8 @@ read_config
 #cpu undervolting
 echo "${cpu_undervolting}" > /sys/devices/system/cpu/cpu0/cpufreq/vdd_levels
 
+insmod /lib/modules/kscoobydoo.ko devicename=scoobydoo_sound
+
 if [ "$logger" == "on" ];then
 insmod /lib/modules/logger.ko
 fi
@@ -42,6 +44,14 @@ if [ "$logger" == "off" ];then
   echo 0 > /sys/module/xt_qtaguid/parameters/debug_mask
 fi
 
+# for ntfs automounting
+insmod /lib/modules/fuse.ko
+mount -o remount,rw /
+mkdir -p /mnt/ntfs
+chmod 755 /mnt/ntfs
+mount -o mode=0755,gid=1000 -t tmpfs tmpfs /mnt/ntfs
+mount -o remount,ro /
+
 /sbin/busybox sh /sbin/ext/install.sh
 
 ##### Early-init phase tweaks #####
@@ -52,19 +62,6 @@ fi
 ##### EFS Backup #####
 (
 /sbin/busybox sh /sbin/ext/efs-backup.sh
-) &
-
-## fix media scanning problem with new clockworkmod
-(
-if [ -d /data/media/clockworkmod ];
-then
-  touch /data/media/clockworkmod/.nomedia
-fi
-sleep 30
-if [ -d /mnt/extSdCard/clockworkmod ];
-then
-  touch /mnt/extSdCard/clockworkmod/.nomedia
-fi
 ) &
 
 # apply STweaks defaults

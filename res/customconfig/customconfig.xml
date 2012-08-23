@@ -17,21 +17,12 @@
              <spinnerItem name="AFTR only" value="1"/> 
              <spinnerItem name="Idle only" value="0"/> 
       </spinner>
-      <spinner description="Sets the smooth scaling level which prevents ondemand based governors to jump directly to maximum frequency with load spikes. This setting will only change the behavior of ondemand and pegasusq governors." name="Smooth Scaling Level" action="generickmem smooth_level 0 int">
-             <spinnerItem name="1800MHz" value="0"/> 
-             <spinnerItem name="1600MHz" value="2"/> 
-             <spinnerItem name="1400MHz" value="4"/> 
-             <spinnerItem name="1200MHz" value="6"/> 
-             <spinnerItem name="1000MHz" value="8"/> 
-             <spinnerItem name="800MHz" value="10"/> 
-             <spinnerItem name="500MHz" value="13"/> 
-      </spinner>
-       <spinner description="Sets the number of CPUs to be used in hotplugging (only for PegasusQ)" name="Max CPU Lock" action="generic /sys/devices/system/cpu/cpufreq/pegasusq/max_cpu_lock">
+      <spinner description="Sets the number of CPUs to be used in hotplugging (only for PegasusQ)" name="Max CPU Lock" action="generic /sys/devices/system/cpu/cpufreq/pegasusq/max_cpu_lock">
              <spinnerItem name="Quad core mode (unlocked,default)" value="0"/> 
              <spinnerItem name="Triple core mode" value="3"/> 
              <spinnerItem name="Dual core mode" value="2"/> 
              <spinnerItem name="Single core mode" value="1"/> 
-       </spinner>
+      </spinner>
     </settingsPane>
 
     <settingsPane description=""
@@ -49,6 +40,7 @@
 		name="CPU Scaling Settings">
        <spinner description="This will set the default CPU governor. Default CPU governor will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default CPU Governor" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor">
              <spinnerItem name="pegasusq" value="pegasusq"/> 
+             <spinnerItem name="lulzactiveq" value="lulzactiveq"/> 
              <spinnerItem name="hotplug" value="hotplug"/> 
        </spinner>
        <seekBar description="Scaling maximum frequency (Samsung default: 1400000)"
@@ -306,7 +298,7 @@
 		name="AC Charge" action="chargecurrent_ac" unit="mA" min="800" reversed="false" step="100" max="1200"/>
       <seekBar description="USB charge current (default 475)" 
 		name="USB Charge" action="chargecurrent_usb" unit="mA" min="450" reversed="false" step="25" max="900"/>
-      <checkbox description="If checked, BetterBatteryStatus will report exclusive (non-overlapping) wakelock statistics." name="Exclusive Wakelock Stats" action="generic01 /sys/module/wakelock/parameters/default_stats" label="Exclusive Wakelock Stats"/>
+      <checkbox description="If checked, BetterBatteryStatus will report discrete (non-overlapping) wakelock statistics." name="Discrete Wakelock Stats" action="generic01 /sys/module/wakelock/parameters/default_stats" label="Discrete Wakelock Stats"/>
     </settingsPane>
     <settingsPane description="Removing/Reinstalling root to support some apps which requires you not to have a rooted phone." name="Remove/Reinstall Root">
       <button description="Removes su and Superuser.apk files from the system partition" name="Remove Root" action="remove-root" label="Remove Root"/>
