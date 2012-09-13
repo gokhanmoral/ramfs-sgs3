@@ -8,9 +8,10 @@ tar xvf /res/misc/dev.tar
 if busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
   # low power mode
   echo 0 > /proc/sys/kernel/rom_feature_set
-  cp -a /res/misc/init.40/* /
-  cp lpm.rc init.rc
-  rm init.smdk4x12.rc
+  cp -a /res/misc/init.41/* /
+  chmod 755 /innt
+  chmod 644 /*.rc
+  chmod 644 /*.prop
   exec /sbin/init2
 fi
 
@@ -30,7 +31,6 @@ JB=0
 
 if [ "$JB" == 1 ];
 then
-  mv -f /sbin/adbd.jb /sbin/adbd
   if [ "$CM10" == 1 ];
   then
     echo 1 > /proc/sys/kernel/rom_feature_set
@@ -39,15 +39,6 @@ then
     echo 0 > /proc/sys/kernel/rom_feature_set
     mv -f /res/misc/init.41/* /
   fi
-else
-  if [ "$AOSP" == "1" ];
-  then
-    echo 1 > /proc/sys/kernel/rom_feature_set
-    mv -f /res/misc/init.cm9/* /
-  else
-    echo 0 > /proc/sys/kernel/rom_feature_set
-    mv -f /res/misc/init.40/* /
-  fi;
 fi
 
 if [ "$SECONDROM" == "1" ];then
@@ -62,5 +53,25 @@ rm -rf /res/misc/init*
 chmod 755 /innt
 chmod 644 /*.rc
 chmod 644 /*.prop
+chmod -R 755 /lib
+
+# misc mods for i9300
+insmod /lib/modules/m0_mods.ko
+# cpu undervolting interfaces
+insmod /lib/modules/cpu_undervolting.ko
+# mali (gpu) interfaces
+insmod /lib/modules/mali_control.ko
+# additional CPU governors
+insmod /lib/modules/cpufreq_hotplug.ko
+insmod /lib/modules/cpufreq_lulzactiveq.ko
+# additional I/O schedulers
+insmod /lib/modules/sio-iosched.ko
+insmod /lib/modules/vr-iosched.ko
+# dns resolver for CIFS
+insmod /lib/modules/dns_resolver.ko
+insmod /lib/modules/md4.ko
+# audio enhancements
+insmod /lib/modules/kscoobydoo.ko devicename=scoobydoo_sound
+
 exec /sbin/init2
 

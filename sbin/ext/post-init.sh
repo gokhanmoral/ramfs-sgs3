@@ -24,7 +24,10 @@ read_config
 #cpu undervolting
 echo "${cpu_undervolting}" > /sys/devices/system/cpu/cpu0/cpufreq/vdd_levels
 
-insmod /lib/modules/kscoobydoo.ko devicename=scoobydoo_sound
+#mdnie sharpness tweak
+if [ "$mdniemod" == "on" ];then
+insmod /lib/modules/mdniemod.ko
+fi
 
 if [ "$logger" == "on" ];then
 insmod /lib/modules/logger.ko
@@ -48,8 +51,8 @@ fi
 insmod /lib/modules/fuse.ko
 mount -o remount,rw /
 mkdir -p /mnt/ntfs
-chmod 755 /mnt/ntfs
-mount -o mode=0755,gid=1000 -t tmpfs tmpfs /mnt/ntfs
+chmod 777 /mnt/ntfs
+mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 mount -o remount,ro /
 
 /sbin/busybox sh /sbin/ext/install.sh
