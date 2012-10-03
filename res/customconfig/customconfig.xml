@@ -22,7 +22,7 @@
 
     <settingsPane description=""
 		name="CPU Undervolting">
-      <spinner description="Sets the CPU undervolting value which will be applied during boot time only. It will not have any effect until you restart your device. Remember: if you change this value and your device doesn't boot you will have to reset extweaks settings using CWM recovery. This value will be applied to all CPU steps before any script or app execution. If you use any script or voltage control app this setting may be overriden by those." name="CPU Undervolting" action="generic /tmp/cpu_undervolting">
+      <spinner description="Sets the CPU undervolting value which will be applied during boot time only. It will not have any effect until you reboot your device. Remember: if you change this value and your device doesn't boot you will have to reset extweaks settings using CWM recovery. This value will be applied to all CPU steps before any script or app execution. If you use any script or voltage control app this setting may be overriden by those." name="CPU Undervolting" action="generic /tmp/cpu_undervolting">
              <spinnerItem name="No Undervolting" value="0"/> 
              <spinnerItem name=" -25 mV" value="-25"/> 
              <spinnerItem name=" -50 mV" value="-50"/> 
@@ -219,7 +219,7 @@
 
   <settingsTab name="Screen">
     <settingsPane description="Other screen related settings" name="Other Settings">
-       <checkbox description="mDNIe sharpness tweaks from hardcore. Requires restart to be effective." name="mDNIe Sharpness Tweaks" action="generic /tmp/mdniemod" label="mDNIe Sharpness Tweaks"/>
+       <checkbox description="mDNIe sharpness tweaks from hardcore. Requires reboot to be effective." name="mDNIe Sharpness Tweaks" action="generic /tmp/mdniemod" label="mDNIe Sharpness Tweaks"/>
        <checkbox description="Enable inverting the screen colors by quickly pressing Home button 4 times" name="mDNIe Negative Toggle" action="generic01 /sys/module/gpio_keys/parameters/mdnie_shortcut_enabled" label="mDNIe Negative Toggle"/>
        <spinner description="Set CPU freq boost level when you touch the screen. Lower levels will help with the battery with the cost of UI lags" name="Touch Boost Level" action="generic /sys/class/misc/m0mods/touch_boost_level">
              <spinnerItem name="1200MHz" value="6"/> 
@@ -235,7 +235,7 @@
   </settingsTab>
   <settingsTab name="Misc">
     <settingsPane description="Misc Settings" name="Misc Settings">
-      <checkbox description="Enable or Disable Android Logger (needs restart)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
+      <checkbox description="Enable or Disable Android Logger (needs reboot)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
       <spinner description="This will set the default I/O scheduler. Default I/O scheduler will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
              <spinnerItem name="sio" value="sio"/> 
              <spinnerItem name="noop" value="noop"/> 
@@ -256,7 +256,7 @@
     </settingsPane>
     <settingsPane description="Removing/Reinstalling root to support some apps which requires you not to have a rooted phone." name="Remove/Reinstall Root">
       <button description="Removes su and Superuser.apk files from the system partition" name="Remove Root" action="remove-root" label="Remove Root"/>
-      <checkbox description="If checked, installs root on the next restart." name="Auto-Install Root" action="generic /tmp/install_root" label="Auto-Install Root"/>
+      <checkbox description="If checked, installs root on the next reboot." name="Auto-Install Root" action="generic /tmp/install_root" label="Auto-Install Root"/>
     </settingsPane>
   </settingsTab>
 

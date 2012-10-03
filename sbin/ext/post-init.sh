@@ -26,7 +26,7 @@ echo "${cpu_undervolting}" > /sys/devices/system/cpu/cpu0/cpufreq/vdd_levels
 
 #mdnie sharpness tweak
 if [ "$mdniemod" == "on" ];then
-insmod /lib/modules/mdniemod.ko
+. /sbin/ext/mdnie-sharpness-tweak.sh
 fi
 
 if [ "$logger" == "on" ];then

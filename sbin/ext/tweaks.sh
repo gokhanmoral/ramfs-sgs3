@@ -41,14 +41,14 @@ echo 400 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_4_0
 for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20;do
 sleep 5;
 renice 15 `pidof kswapd0`;
-renice -3 `pidof android.process.acore`;
-renice -3 `pidof android.process.media`;
-renice -19 `pidof com.sec.android.app.launcher`;
-renice -19 `pidof com.anddoes.launcher`;
-renice -19 `pidof com.teslacoilsw.launcher`;
-renice -19 `pidof com.sec.android.inputmethod`;
-renice -19 `pidof com.cootek.smartinputv5`;
-renice -19 `pidof com.swype.android.inputmethod`;
+renice 3 `pidof android.process.acore`;
+renice 3 `pidof android.process.media`;
+renice -10 `pidof com.sec.android.app.launcher`;
+renice -10 `pidof com.anddoes.launcher`;
+renice -10 `pidof com.teslacoilsw.launcher`;
+renice -10 `pidof com.sec.android.inputmethod`;
+renice -10 `pidof com.cootek.smartinputv5`;
+renice -10 `pidof com.swype.android.inputmethod`;
 done;
 )&
 
