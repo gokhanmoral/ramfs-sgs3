@@ -3,8 +3,11 @@
 # remount partitions with noatime
 for k in $(mount | grep relatime | cut -d " " -f3);
 do
-	mount -o remount,noatime $k;
+mount -o remount,noatime,nodiratime,noauto_da_alloc,barrier=0 $k
 done;
+
+echo 256 > /sys/block/mmcblk0/bdi/read_ahead_kb
+echo 256 > /sys/block/mmcblk1/bdi/read_ahead_kb
 
 #enable kmem interface for everyone
 echo 0 > /proc/sys/kernel/kptr_restrict
@@ -24,10 +27,10 @@ echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 # pegasusq tweaks
 echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1
-echo 200000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
-echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1
-echo 400000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0
-echo 800000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_1
+echo 350000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
+echo 600000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1
+echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0
+echo 700000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_1
 echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_4_0
 echo 150 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_1_1
 echo 150 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_0
@@ -35,20 +38,22 @@ echo 300 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_1
 echo 300 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_0
 echo 400 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_1
 echo 400 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_4_0
+echo 2 > /sys/devices/system/cpu/cpufreq/pegasusq/sampling_down_factor
+echo 37 > /sys/devices/system/cpu/cpufreq/pegasusq/freq_step
 
 # process priority modifications
-(
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20;do
-sleep 5;
-renice 15 `pidof kswapd0`;
-renice 3 `pidof android.process.acore`;
-renice 3 `pidof android.process.media`;
-renice -10 `pidof com.sec.android.app.launcher`;
-renice -10 `pidof com.anddoes.launcher`;
-renice -10 `pidof com.teslacoilsw.launcher`;
-renice -10 `pidof com.sec.android.inputmethod`;
-renice -10 `pidof com.cootek.smartinputv5`;
-renice -10 `pidof com.swype.android.inputmethod`;
-done;
-)&
+# (
+# for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20;do
+# sleep 5;
+# renice 15 `pidof kswapd0`;
+# renice -3 `pidof android.process.acore`;
+# renice 3 `pidof android.process.media`;
+# renice -10 `pidof com.sec.android.app.launcher`;
+# renice -10 `pidof com.anddoes.launcher`;
+# renice -10 `pidof com.teslacoilsw.launcher`;
+# renice -10 `pidof com.sec.android.inputmethod`;
+# renice -10 `pidof com.cootek.smartinputv5`;
+# renice -10 `pidof com.swype.android.inputmethod`;
+# done;
+# )&
 

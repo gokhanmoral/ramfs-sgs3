@@ -1,21 +1,17 @@
 #!/sbin/busybox sh
 
-if [ "a$2" == "a" ];then
-exit
-fi
+if [ "a$2" != "a" ];then
 
 filename=$(basename $2)
 
 if [ "a$3" == "a" ];then
   evalcmd='eval "echo \$$filename"'
   eval $evalcmd
-  exit
 else
   evalcmd='eval "$filename=$3"'
   eval $evalcmd
   evalcmd='eval "echo \$$filename"'
   eval $evalcmd
-fi
 
 echo -${digital_gain}000 > /sys/class/misc/scoobydoo_sound/digital_gain
 echo 1 A 0x0FBB > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
@@ -96,4 +92,5 @@ else
     echo 1 > /sys/class/misc/scoobydoo_sound/headphone_eq
 fi
 
-
+fi
+fi

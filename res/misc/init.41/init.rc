@@ -234,6 +234,12 @@ on post-fs-data
     mkdir /data/gps 771 system system
     chown system system /data/gps
 
+# 3LM settings
+    setprop ro.3lm.production 1
+    setprop ro.3LM.extended 1
+	setprop ro.3LM.oem_sd_encryption 1
+	setprop ro.3LM.oem_manifest 3
+
 #[ SEC_MM_DRM
 
     # [ save OMA DB, when upgrading from GB to ICS    
@@ -753,14 +759,14 @@ service powersnd /system/bin/samsungpowersoundplay
 service bootanim /system/bin/bootanimation
     class main
     user graphics
-    group graphics
+    group graphics system
     disabled
     oneshot
 
 service samsungani /system/bin/samsungani
     class main
     user graphics
-    group graphics
+    group graphics system
     disabled
     oneshot
 
