@@ -248,7 +248,6 @@
 		name="AC Charge" action="chargecurrent_ac" unit="mA" min="800" reversed="false" step="100" max="1200"/>
       <seekBar description="USB charge current (default 475)" 
 		name="USB Charge" action="chargecurrent_usb" unit="mA" min="450" reversed="false" step="25" max="900"/>
-      <checkbox description="Check this if you don't want boot logo to be shown. Remember that it will always be shown if you have a secondrom installation." name="No boot-logo" action="no-boot-logo" label="No boot-logo"/>
       <checkbox description="If checked, BetterBatteryStatus will report discrete (non-overlapping) wakelock statistics." name="Discrete Wakelock Stats" action="generic01 /sys/module/wakelock/parameters/default_stats" label="Discrete Wakelock Stats"/>
     </settingsPane>
     <settingsPane description="Removing/Reinstalling root to support some apps which requires you not to have a rooted phone." name="Remove/Reinstall Root">
