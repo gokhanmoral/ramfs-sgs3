@@ -6,9 +6,6 @@ do
 mount -o remount,noatime,nodiratime,noauto_da_alloc,barrier=0 $k
 done;
 
-echo 256 > /sys/block/mmcblk0/bdi/read_ahead_kb
-echo 256 > /sys/block/mmcblk1/bdi/read_ahead_kb
-
 #enable kmem interface for everyone
 echo 0 > /proc/sys/kernel/kptr_restrict
 
@@ -27,11 +24,11 @@ echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 # pegasusq tweaks
 echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1
-echo 350000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
+echo 200000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
 echo 600000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1
-echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0
+echo 300000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0
 echo 700000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_1
-echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_4_0
+echo 400000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_4_0
 echo 150 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_1_1
 echo 150 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_0
 echo 300 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_1
