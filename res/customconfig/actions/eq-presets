@@ -14,13 +14,13 @@ else
   eval $evalcmd
 
 echo -${digital_gain}000 > /sys/class/misc/scoobydoo_sound/digital_gain
-echo 1 A 0x0FBB > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 1 B 0x0407 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 1 PG 0x0114 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 2 A 0x1F8C > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 2 B 0xF073 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 2 C 0x040A > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
-echo 2 PG 0x01C8 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 1 A 0x0FBB > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 1 B 0x0407 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 1 PG 0x0114 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 2 A 0x1F8C > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 2 B 0xF073 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 2 C 0x040A > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
+#echo 2 PG 0x01C8 > /sys/class/misc/scoobydoo_sound/headphone_eq_bands_values
 
 if [ "$eq_selection" == "0" ];
 then

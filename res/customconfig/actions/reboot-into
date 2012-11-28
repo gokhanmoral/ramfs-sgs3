@@ -1,6 +1,6 @@
 #!/sbin/busybox sh
 
 if [ "a$2" != "a" ];then
-  echo $2 > $EXTERNAL_STORAGE/.nextboot
+  echo $2 > /data/media/.nextboot
   reboot
 fi

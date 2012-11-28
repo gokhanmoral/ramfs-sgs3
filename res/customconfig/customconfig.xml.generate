@@ -1,3 +1,6 @@
+#!/sbin/busybox sh
+
+cat << ENDCONFIG
 <settingsRoot>
   <settingsTab name="CPU">
     <settingsPane description="These settings control CFS (Complete Fair Scheduler) Task Scheduler Settings" name="CFS Settings">
@@ -12,7 +15,9 @@
              <spinnerItem name="AFTR only" value="1"/> 
              <spinnerItem name="Idle only" value="0"/> 
       </spinner>
-    </settingsPane>
+      <seekBar description="Sets the sched_mc value which changes the cpu scheduler behaviour for multi-cpu systems. 0 is kernel's default value which turns sched_mc off. Setting it to 1 means that the first core will be tried to be loaded more and setting it to 2 will bias task wake-ups to semi-idle cpu package for power savings. (default: 0)"
+            name="sched_mc" action="generic /sys/devices/system/cpu/sched_mc_power_savings" unit="" min="0" reversed="false" step="1" max="2"/>
+     </settingsPane>
 
     <settingsPane description=""
 		name="CPU Undervolting">
@@ -38,10 +43,54 @@
              <spinnerItem name="lulzactiveq" value="lulzactiveq"/> 
              <spinnerItem name="hotplug" value="hotplug"/> 
        </spinner>
-       <seekBar description="Scaling maximum frequency (Samsung default: 1400000)"
-                name="scaling_max_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq" unit=" kHz" min="800000" reversed="false" step="100000" max="1700000"/>
-       <seekBar description="Scaling minimum frequency (Samsung default: 200000)"
-                name="scaling_min_freq" action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq" unit=" kHz" min="200000" reversed="false" step="100000" max="500000"/>
+      <spinner description="Set the maximum freqency the CPU scales up to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq\` / 1000` MHz." 
+               name="CPU max frequency" 
+               action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq">"
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_uV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '         <spinnerItem name="'$FREQ' MHz" value="'${FREQ}000'"/>'
+done
+`
+       </spinner>
+      <spinner description="Set the minimum freqency the CPU scales down to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq\` / 1000` MHz." 
+               name="CPU min frequency" 
+               action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq">"
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_uV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '         <spinnerItem name="'$FREQ' MHz" value="'${FREQ}000'"/>'
+done
+`
+       </spinner>
+    </settingsPane>
+  </settingsTab>
+  <settingsTab name="CPU_UV">
+
+    <settingsPane description="Apply the settings on boot only if the desired settings prove to be stable, else the device ends up in a boot-loop. If turned off, the displayed values do not correspond the current live values but the saved profile values, some inconsistencies may occur on applying." 
+                  name="CPU control switch">
+      <checkbox description="If enabled, the below settings will be applied at boot." 
+                name="Set CPU settings on boot" 
+                action="controlswitch CPU"
+                label="Set on boot"/>
+    </settingsPane>
+
+    <settingsPane description="Decreasing voltage will lower power consumption of the CPU. Increasing it on overclocked frequencies improves stability. Too low voltage may cause instabilities and freezes." 
+                  name="CPU voltage control">
+
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_uV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '      <seekBar  description="Default voltage: '$UVOLT'µV"
+	        name="'${FREQ}' MHz step" 
+                action="cpuvolt '${FREQ}'"
+                unit=" µV" min="600000" reversed="false" step="12500" max="1400000"/>"'
+  CPUFREQLIST="$CPUFREQLIST $FREQ"
+done
+`
     </settingsPane>
   </settingsTab>
 
@@ -145,7 +194,6 @@
 		name="GPU Threshold 5-DOWN" action="gpu-thresh 5DOWN" unit="%" min="0" reversed="false" step="5" max="100"/>
     </settingsPane>
   </settingsTab>
-
   <settingsTab name="Audio">
     <settingsPane description="Speaker Tuning Settings" name="Speaker Tuning">
       <checkbox description="Enable speaker tuning for better bass response on main speakers" name="Speaker Tuning" action="generic01 /sys/class/misc/scoobydoo_sound/speaker_tuning" label="Speaker Tuning"/>
@@ -232,17 +280,20 @@
              <spinnerItem name="200MHz (disabled)" value="16"/> 
        </spinner>
        <checkbox description="Enable slide2wake feature which will let you unlock the phone by swiping your finger straight over the screen from left to right. Enabling this feature may decrease your battery life." name="Slide2Wake" action="generic01 /sys/devices/virtual/sec/tsp/tsp_slide2wake" label="Slide2Wake"/>
+       <seekBar description="FB earlysuspend delay to run CRT animation when you turn the screen off." 
+		name="FB Earlysuspend Delay" action="generickmem fbearlysuspend_delay 0 int" unit=" ms" min="0" reversed="false" step="100" max="500"/>
     </settingsPane>
   </settingsTab>
   <settingsTab name="Misc">
     <settingsPane description="Misc Settings" name="Misc Settings">
       <checkbox description="Enable or Disable Android Logger (needs reboot)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
       <spinner description="This will set the default I/O scheduler. Default I/O scheduler will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." name="Default I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
-             <spinnerItem name="sio" value="sio"/> 
-             <spinnerItem name="noop" value="noop"/> 
-             <spinnerItem name="deadline" value="deadline"/> 
-             <spinnerItem name="vr" value="vr"/> 
-             <spinnerItem name="cfq" value="cfq"/> 
+`#Start I/O Scheduler dynamic block
+for IOSCHED in \`cat /sys/block/mmcblk0/queue/scheduler|sed -e 's/\]//;s/\[//'\`;
+do
+echo '             <spinnerItem name="'$IOSCHED'" value="'$IOSCHED'"/>'
+done
+#End I/O Scheduler dynamic block`
       </spinner>
       <spinner description="Notification LED Behavior" name="Notification LED Behavior" action="generic /sys/devices/virtual/sec/led/led_fade">
              <spinnerItem name="ROM default" value="-1"/> 
@@ -276,3 +327,4 @@
     </settingsPane>
   </settingsTab>
 </settingsRoot>
+ENDCONFIG

@@ -23,6 +23,7 @@ cat /proc/version | grep infra && (kmemhelper -t string -n linux_proc_banner -o 
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 # pegasusq tweaks
+echo 20000 > /sys/devices/system/cpu/cpufreq/pegasusq/sampling_rate
 echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1
 echo 200000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
 echo 600000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1

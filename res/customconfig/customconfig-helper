@@ -9,22 +9,27 @@ PROFILE_PATH=/data/.siyah
 TEMP_CONFIG=$PROFILE_PATH/.config.tmp
 LAST_SELECTED=.active.profile
 ACTIVE_PROFILE=${PROFILE_PATH}/${LAST_SELECTED}
+ACTION_SCRIPTS=/res/customconfig/actions
 
-read_dom () {
-    local IFS=\>
-    read -r ENTITY CONTENT
-}
 
 apply_config()
 {
-while read_dom; do
-action=$(echo $ENTITY |  grep -v \<button | sed -e 's/action=/\naction=/g' |grep action|awk -F'"' '{print $2}')
-if [ "a$action" != a ];then
-  actionval=`/res/uci.sh $action`
-  echo applying: /res/uci.sh $action $actionval
-  eval /res/uci.sh $action $actionval
-fi
-done < $CONFIG_XML
+actions=`print_config | \
+    sed -e 's/\n/ /g' -e 's/>/\n/g' -e '/<button/d' \
+        -e 's/action=/\naction=/g' | \
+    grep action | awk -F'"' '{print $2 }'`
+OLDIFS=$IFS
+IFS=$'\n'
+for i in $actions;do
+  IFS=$OLDIFS
+  action=`echo $i | awk '{print $1}'`
+  actionparam=`echo $i | awk '{print $2,$3,$4,$5}'`
+  if [ "a$action" != a ];then
+    actionval=`. $ACTION_SCRIPTS/$action $action $actionparam`
+    echo applying: /res/uci.sh $action $actionparam $actionval
+    . $ACTION_SCRIPTS/$action $action $actionparam $actionval
+  fi
+done
 }
 
 print_config()
@@ -124,6 +129,11 @@ read_defaults ()
 }
 
 # some initialization code
+if [ ! -f $CONFIG_XML ]; then
+  mount -o remount,rw /
+  . /res/customconfig/customconfig.xml.generate > $CONFIG_XML
+  mount -o remount,ro /
+fi
 
 if [ ! -f $PROFILE_PATH/$LAST_SELECTED ];then 
   echo default > $PROFILE_PATH/$LAST_SELECTED
@@ -133,12 +143,4 @@ fi
 if [ ! -f $PROFILE_PATH/default.profile ];then
   cp $DEFAULT_PROFILE $PROFILE_PATH/default.profile
   chmod 777 $PROFILE_PATH/default.profile
-fi
-if [ ! -f $PROFILE_PATH/battery.profile ];then
-  cp $BATTERY_PROFILE $PROFILE_PATH/battery.profile
-  chmod 777 $PROFILE_PATH/battery.profile
-fi
-if [ ! -f $PROFILE_PATH/performance.profile ];then
-  cp $PERFORMANCE_PROFILE $PROFILE_PATH/performance.profile
-  chmod 777 $PROFILE_PATH/performance.profile
 fi

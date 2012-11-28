@@ -3,15 +3,15 @@
 if [ "a$2" != "a" ];then
   case "$2" in
     on)
-      echo 1 > $EXTERNAL_STORAGE/.nobootlogo
+      echo 1 > /data/media/.nobootlogo
       ;;
     off)
-      rm -f $EXTERNAL_STORAGE/.nobootlogo
+      rm -f /data/media/.nobootlogo
       ;;
   esac;
 fi
 
-if [ -f $EXTERNAL_STORAGE/.nobootlogo ];then
+if [ -f /data/media/.nobootlogo ];then
   echo on
 else
   echo off

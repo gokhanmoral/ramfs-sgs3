@@ -68,8 +68,10 @@ mount -o remount,ro /
 ) &
 
 # apply STweaks defaults
-sleep 12
+sleep 13
+export CONFIG_BOOTING=1
 /res/uci.sh apply
+export CONFIG_BOOTING=
 
 ##### init scripts #####
 /sbin/busybox sh /sbin/ext/run-init-scripts.sh

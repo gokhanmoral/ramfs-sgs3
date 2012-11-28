@@ -5,6 +5,9 @@ filename=$(basename $2)
 
 if [ "a$3" == "a" ];then
   evalcmd='eval "echo \$$filename"'
+  if [ "a`eval $evalcmd`" == "a" ]; then
+    eval $filename=`cat $2`
+  fi
   eval $evalcmd
 else
   evalcmd='eval "$filename=$3"'
