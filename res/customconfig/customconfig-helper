@@ -25,6 +25,7 @@ for i in $actions;do
   action=`echo $i | awk '{print $1}'`
   actionparam=`echo $i | awk '{print $2,$3,$4,$5}'`
   if [ "a$action" != a ];then
+    . $ACTION_SCRIPTS/$action $action $actionparam
     actionval=`. $ACTION_SCRIPTS/$action $action $actionparam`
     echo applying: /res/uci.sh $action $actionparam $actionval
     . $ACTION_SCRIPTS/$action $action $actionparam $actionval
