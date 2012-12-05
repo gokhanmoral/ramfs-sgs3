@@ -77,5 +77,6 @@ zram_size=0
 speaker_offset=0
 speaker_tuning=off
 speaker_tuning_level=44
+fbearlysuspend_delay0=0
 led_fade=-1
 

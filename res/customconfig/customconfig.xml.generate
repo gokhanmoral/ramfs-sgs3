@@ -162,7 +162,7 @@ done
              <spinnerItem name="54MHz" value="54"/> 
       </spinner>
     </settingsPane>
-    <settingsPane description="GPU Voltage Levels: The defaults are 875, 900, 950, 1025 and 1075." name="GPU Voltage Levels">
+    <settingsPane description="GPU Voltage Levels." name="GPU Voltage Levels">
       <seekBar description="GPU Voltage for the first (lowest) step" 
 		name="GPU Voltage Level1" action="gpu-voltage 1" unit="mV" min="600" reversed="false" step="25" max="1200"/>
       <seekBar description="GPU Voltage for the second step" 
