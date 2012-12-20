@@ -24,6 +24,8 @@ echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 # pegasusq tweaks
 echo 20000 > /sys/devices/system/cpu/cpufreq/pegasusq/sampling_rate
+echo 20 > /sys/devices/system/cpu/cpufreq/pegasusq/cpu_up_rate
+echo 40 > /sys/devices/system/cpu/cpufreq/pegasusq/cpu_down_rate
 echo 500000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1
 echo 200000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0
 echo 600000 > /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1

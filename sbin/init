@@ -98,18 +98,21 @@ else
 fi
 
 
-AOSP=0
 MIUI=0
 CM10=0
-JB=0
+CM101=0
 
-[ -f /system/framework/framework2.jar ] || AOSP=1
 [ -f /system/framework/miui-framework.jar ] && MIUI=1
-[ -f /system/lib/ssl/engines/libkeystore.so ] && JB=1
 [ -f /system/framework/seccamera.jar ] || CM10=1
+[ -f /system/framework/framework2.jar ] || CM101=1
 
-if [ "$JB" == 1 ];
+
+if [ "$CM101" == 1 ];
 then
+  echo 3 > /proc/sys/kernel/rom_feature_set
+  mv -f /lib/modules/dhd_cm.ko /lib/modules/dhd.ko
+  mv -f /res/misc/init.cm10.1/* /
+else
   if [ "$CM10" == 1 ];
   then
     echo 3 > /proc/sys/kernel/rom_feature_set

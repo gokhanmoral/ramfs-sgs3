@@ -67,11 +67,11 @@ case "$eq_preset" in
     echo 1 > /sys/class/misc/scoobydoo_sound/headphone_eq
     ;;
   5)
-    echo 4 > /sys/class/misc/scoobydoo_sound/headphone_eq_b1_gain
+    echo 8 > /sys/class/misc/scoobydoo_sound/headphone_eq_b1_gain
     echo 3 > /sys/class/misc/scoobydoo_sound/headphone_eq_b2_gain
-    echo 2 > /sys/class/misc/scoobydoo_sound/headphone_eq_b3_gain
-    echo 2 > /sys/class/misc/scoobydoo_sound/headphone_eq_b4_gain
-    echo 3 > /sys/class/misc/scoobydoo_sound/headphone_eq_b5_gain
+    echo -2 > /sys/class/misc/scoobydoo_sound/headphone_eq_b3_gain
+    echo 3 > /sys/class/misc/scoobydoo_sound/headphone_eq_b4_gain
+    echo 8 > /sys/class/misc/scoobydoo_sound/headphone_eq_b5_gain
     echo 1 > /sys/class/misc/scoobydoo_sound/headphone_eq
     ;;
   6)

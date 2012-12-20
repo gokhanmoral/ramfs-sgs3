@@ -597,7 +597,10 @@ on boot
     write /sys/block/zram0/disksize 209715200
     chmod 0664 /sys/block/zram0/initstate
     chown system system /sys/block/zram0/initstate
-    write /sys/block/zram0/initstate 1
+#
+# Disabled by Yank555.lu - Prepare zram for swap but don't activate it yet
+#
+#   write /sys/block/zram0/initstate 1
 
 on nonencrypted
     class_start late_start
@@ -799,10 +802,6 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
 service installd /system/bin/installd
     class main
     socket installd stream 600 system system
-
-service flash_recovery /system/etc/install-recovery.sh
-    class main
-    oneshot
 
 service racoon /system/bin/racoon
     class main
