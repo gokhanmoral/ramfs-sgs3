@@ -29,17 +29,7 @@ on fs
     
     chown radio system /efs
     chmod 0771 /efs
-    mount tmpfs tmpfs /system/lib/modules
-    symlink /lib/modules/cifs.ko /system/lib/modules/cifs.ko
-    symlink /lib/modules/dhd.ko /system/lib/modules/dhd.ko
-    symlink /lib/modules/scsi_wait_scan.ko /system/lib/modules/scsi_wait_scan.ko
-    symlink /lib/modules/Si4709_driver.ko /system/lib/modules/Si4709_driver.ko
-    symlink /lib/modules/btlock.ko /system/lib/modules/btlock.ko
-    symlink /lib/modules/commkm.ko /system/lib/modules/commkm.ko
-    symlink /lib/modules/mvpkm.ko /system/lib/modules/mvpkm.ko
-    symlink /lib/modules/pvtcpkm.ko /system/lib/modules/pvtcpkm.ko
-    symlink /lib/modules/exfat_core.ko /system/lib/modules/exfat_core.ko
-    symlink /lib/modules/exfat_fs.ko /system/lib/modules/exfat_fs.ko
+    exec /sbin/ext/modules.sh
 
 on post-fs-data
      # we will remap this as /mnt/sdcard with the sdcard fuse tool

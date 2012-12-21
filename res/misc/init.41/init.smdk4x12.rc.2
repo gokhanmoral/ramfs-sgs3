@@ -189,9 +189,7 @@ on boot
 
 on fs
     mount_all /fstab.smdk4x12
-    mount ext4 /.secondrom/media/.secondrom/data /data wait bind
-    mkdir /data/media
-    mount ext4 /.secondrom/media /data/media wait bind    
+    exec /sbin/ext/db-bindmount.sh
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime wait
     setprop ro.crypto.fuse_sdcard true
 
