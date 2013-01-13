@@ -68,7 +68,6 @@ mount -o remount,ro /
 ) &
 
 # apply STweaks defaults
-sleep 13
 export CONFIG_BOOTING=1
 /res/uci.sh apply
 export CONFIG_BOOTING=

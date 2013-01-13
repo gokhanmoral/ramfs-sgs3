@@ -42,6 +42,15 @@ if grep -q bootmode=2 /proc/cmdline ; then
   NEXTBOOT=0
 fi
 
+#move .secondrom folder back to the original location if cm10.1 moved it to a subfolder
+if [ -d /.secondrom/media/0/.secondrom ];then
+  if [ ! -d /.secondrom/media/.secondrom ];then
+    mkdir /.secondrom/media/.secondrom
+    mv -f /.secondrom/media/0/.secondrom/* /.secondrom/media/.secondrom
+    rmdir /.secondrom/media/0/.secondrom
+  fi
+fi
+
 if [ "$NEXTBOOT" == "0" ]; then
   mv -f /res/etc /
   umount /.secondrom

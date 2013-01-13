@@ -1,7 +1,7 @@
 /dev/mali                 0666   system     system
 /dev/ump                  0666   system     graphics
 /dev/ion                  0666   system     system
-/dev/exynos-mem           0660   system     graphics
+/dev/exynos-mem           0660   system     camera
 
 /dev/media0               0660   system     system
 /dev/media1               0660   system     camera
