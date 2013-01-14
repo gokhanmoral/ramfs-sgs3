@@ -29,7 +29,7 @@ on init
 
 on fs
     mount_all /fstab.smdk4x12
-    exec /sbin/db-bindmount.sh
+    exec /sbin/ext/db-bindmount.sh
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime wait
 
     setprop ro.crypto.fuse_sdcard true
